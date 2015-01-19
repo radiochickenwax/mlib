@@ -21,7 +21,7 @@ Analysis:
    (ie. the number of pushes) grows large, under this strategy for
    resizing, what is the big-oh complexity for a push?  
 
-The complexity is O(1)+.  
+By amortized analysis, the complexity is O(1)+.  
 
 |-------------+----------+---------+--------------+-----------|
 | (N) push op | capacity | op cost | sum of costs |  avg cost |
@@ -151,6 +151,10 @@ Increasing the capacity by a constant:
    total cost)? How might you adjust the array's shrinking policy to
    avoid this? (Hint: You may assume that the initial capacity of the
    array is N/2.) 
+
+
+I'm not sure what's right and wrong here.  I think there is a big
+difference between amortized analysis and asymptotic analysis. 
 
 Devising a sequence of push() and pop() that results in poor
 performance isn't difficult.  Most algorithms that come to mind will
