@@ -42,11 +42,13 @@ int isNumber(char *s, double *num)
 */
 void add (struct DynArr *stack)
 {
-  assert(stack->size >= 2);
-  TYPE sum = stack->data[stack->size-1] + stack->data[stack->size-2];
+  printf("sizeDynArr(stack) = %d\n",sizeDynArr(stack));
+  assert(sizeDynArr(stack) >= 2);
+  TYPE param1 = topDynArr(stack);
   popDynArr(stack);
+  TYPE param2 = topDynArr(stack);
   popDynArr(stack);
-  pushDynArr(stack,sum);
+  pushDynArr(stack,param1 + param2);
 }
 
 /*	param: stack the stack being manipulated
@@ -56,11 +58,12 @@ void add (struct DynArr *stack)
 */
 void subtract(struct DynArr *stack)
 {
-  assert(stack->size >= 2);
-  TYPE difference = stack->data[stack->size-1] - stack->data[stack->size-2];
+  assert(sizeDynArr(stack) >= 2);
+  TYPE param1 = topDynArr(stack);
   popDynArr(stack);
+  TYPE param2 = topDynArr(stack);
   popDynArr(stack);
-  pushDynArr(stack,difference);
+  pushDynArr(stack,param1 - param2);
 }
 
 /*	param: stack the stack being manipulated
@@ -70,11 +73,12 @@ void subtract(struct DynArr *stack)
 */
 void divide(struct DynArr *stack)
 {
-  assert(stack->size >= 2);
-  TYPE quotient = stack->data[stack->size-1] / stack->data[stack->size-2];
+  assert(sizeDynArr(stack) >= 2);
+  TYPE param1 = topDynArr(stack);
   popDynArr(stack);
+  TYPE param2 = topDynArr(stack);
   popDynArr(stack);
-  pushDynArr(stack,quotient);
+  pushDynArr(stack,param1 / param2);
 }
 
 double calculate(int numInputTokens, char **inputString)
@@ -82,7 +86,8 @@ double calculate(int numInputTokens, char **inputString)
 	int i;
 	double result = 0.0;
 	char *s;
-	struct DynArr *stack;
+	//struct DynArr *stack;
+	DynArr *stack;
 
 	//set up the stack
 	stack = createDynArr(20);
@@ -132,11 +137,13 @@ double calculate(int numInputTokens, char **inputString)
 		else if(strcmp(s, "log") == 0)
 			/* FIXME: replace printf with your own function */
 			printf("Log\n");
+		else if (isNumber(s, &result))
+		  pushDynArr(stack,result);
 		else 
 		{
 			// FIXME: You need to develop the code here (when s is not an operator)
 			// Remember to deal with special values ("pi" and "e")
-			
+		  printf("Error\n");
 		}
 	}	//end for 
 
@@ -155,6 +162,6 @@ int main(int argc , char** argv)
 	if (argc == 1)
 		return 0;
 
-	calculate(argc,argv);
+	printf("Result: %f\n",calculate(argc,argv));
 	return 0;
 }
