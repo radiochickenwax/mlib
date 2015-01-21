@@ -99,6 +99,22 @@ void multiply(struct DynArr *stack)
 }
 
 
+/*	param: stack the stack being manipulated
+	pre: the stack contains at least two elements
+	post: the top two elements are popped and 
+	their power is pushed back onto the stack.
+*/
+void power(struct DynArr *stack)
+{
+  assert(sizeDynArr(stack) >= 2);
+  TYPE param1 = topDynArr(stack);
+  popDynArr(stack);
+  TYPE param2 = topDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,pow(param1,param2));
+}
+
+
 double calculate(int numInputTokens, char **inputString)
 {
 	int i;
@@ -131,8 +147,7 @@ double calculate(int numInputTokens, char **inputString)
 		else if(strcmp(s, "x") == 0)
 		  multiply(stack);
 		else if(strcmp(s, "^") == 0)
-		  /* FIXME: replace printf with your own function */
-		  printf("Power\n");
+		  power(stack);
 		else if(strcmp(s, "^2") == 0)
 			/* FIXME: replace printf with your own function */
 			printf("Squaring\n");
