@@ -44,10 +44,10 @@ void add (struct DynArr *stack)
 {
   printf("sizeDynArr(stack) = %d\n",sizeDynArr(stack));
   assert(sizeDynArr(stack) >= 2);
-  TYPE param1 = topDynArr(stack);
+  double param1 = topDynArr(stack);
   printf("p1: %f\n",param1);
   popDynArr(stack);
-  TYPE param2 = topDynArr(stack);
+  double param2 = topDynArr(stack);
   printf("p2: %f\n",param2);
   popDynArr(stack);
   pushDynArr(stack,param1 + param2);
@@ -61,9 +61,9 @@ void add (struct DynArr *stack)
 void subtract(struct DynArr *stack)
 {
   assert(sizeDynArr(stack) >= 2);
-  TYPE param1 = topDynArr(stack);
+  double param1 = topDynArr(stack);
   popDynArr(stack);
-  TYPE param2 = topDynArr(stack);
+  double param2 = topDynArr(stack);
   popDynArr(stack);
   pushDynArr(stack,param1 - param2);
 }
@@ -76,9 +76,9 @@ void subtract(struct DynArr *stack)
 void divide(struct DynArr *stack)
 {
   assert(sizeDynArr(stack) >= 2);
-  TYPE param1 = topDynArr(stack);
+  double param1 = topDynArr(stack);
   popDynArr(stack);
-  TYPE param2 = topDynArr(stack);
+  double param2 = topDynArr(stack);
   popDynArr(stack);
   pushDynArr(stack,param1 / param2);
 }
@@ -91,9 +91,9 @@ void divide(struct DynArr *stack)
 void multiply(struct DynArr *stack)
 {
   assert(sizeDynArr(stack) >= 2);
-  TYPE param1 = topDynArr(stack);
+  double param1 = topDynArr(stack);
   popDynArr(stack);
-  TYPE param2 = topDynArr(stack);
+  double param2 = topDynArr(stack);
   popDynArr(stack);
   pushDynArr(stack,param1*param2);
 }
@@ -107,9 +107,9 @@ void multiply(struct DynArr *stack)
 void power(struct DynArr *stack)
 {
   assert(sizeDynArr(stack) >= 2);
-  TYPE param1 = topDynArr(stack);
+  double param1 = topDynArr(stack);
   popDynArr(stack);
-  TYPE param2 = topDynArr(stack);
+  double param2 = topDynArr(stack);
   popDynArr(stack);
   pushDynArr(stack,pow(param1,param2));
 }
@@ -123,7 +123,7 @@ void power(struct DynArr *stack)
 void square(struct DynArr *stack)
 {
   assert(sizeDynArr(stack) >= 1);
-  TYPE param = topDynArr(stack);
+  double param = topDynArr(stack);
   popDynArr(stack);
   pushDynArr(stack,pow(param,2));
 }
@@ -137,7 +137,7 @@ void square(struct DynArr *stack)
 void cube(struct DynArr *stack)
 {
   assert(sizeDynArr(stack) >= 1);
-  TYPE param = topDynArr(stack);
+  double param = topDynArr(stack);
   popDynArr(stack);
   pushDynArr(stack,pow(param,3));
 }
@@ -151,7 +151,7 @@ void cube(struct DynArr *stack)
 void absVal(struct DynArr *stack)
 {
   assert(sizeDynArr(stack) >= 1);
-  TYPE param = topDynArr(stack);
+  double param = topDynArr(stack);
   popDynArr(stack);
   pushDynArr(stack,abs(param));
 }
@@ -165,7 +165,7 @@ void absVal(struct DynArr *stack)
 void squareRoot(struct DynArr *stack)
 {
   assert(sizeDynArr(stack) >= 1);
-  TYPE param = topDynArr(stack);
+  double param = topDynArr(stack);
   popDynArr(stack);
   pushDynArr(stack,sqrt(param));
 }
@@ -178,9 +178,23 @@ void squareRoot(struct DynArr *stack)
 void expNat(struct DynArr *stack)
 {
   assert(sizeDynArr(stack) >= 1);
-  TYPE param = topDynArr(stack);
+  double param = topDynArr(stack);
   popDynArr(stack);
   pushDynArr(stack,exp(param));
+}
+
+
+/*	param: stack the stack being manipulated
+	pre: the stack contains at least one element
+	post: the top element is popped and 
+	its ln is pushed back onto the stack.
+*/
+void ln(struct DynArr *stack)
+{
+  assert(sizeDynArr(stack) >= 1);
+  double param = topDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,log(param));
 }
 
 
@@ -228,8 +242,7 @@ double calculate(int numInputTokens, char **inputString)
 		else if(strcmp(s, "exp") == 0)
 		  expNat(stack);
 		else if(strcmp(s, "ln") == 0)
-			/* FIXME: replace printf with your own function */
-			printf("Natural Log\n");
+		  ln(stack);
 		else if(strcmp(s, "log") == 0)
 			/* FIXME: replace printf with your own function */
 			printf("Log\n");
