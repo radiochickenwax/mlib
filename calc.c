@@ -115,6 +115,20 @@ void power(struct DynArr *stack)
 }
 
 
+/*	param: stack the stack being manipulated
+	pre: the stack contains at least one element
+	post: the top element is popped and 
+	its square is pushed back onto the stack.
+*/
+void square(struct DynArr *stack)
+{
+  assert(sizeDynArr(stack) >= 1);
+  TYPE param = topDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,pow(param,2));
+}
+
+
 double calculate(int numInputTokens, char **inputString)
 {
 	int i;
@@ -149,8 +163,7 @@ double calculate(int numInputTokens, char **inputString)
 		else if(strcmp(s, "^") == 0)
 		  power(stack);
 		else if(strcmp(s, "^2") == 0)
-			/* FIXME: replace printf with your own function */
-			printf("Squaring\n");
+		  square(stack);
 		else if(strcmp(s, "^3") == 0)
 			/* FIXME: replace printf with your own function */
 			printf("Cubing\n");
