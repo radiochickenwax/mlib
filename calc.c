@@ -80,7 +80,7 @@ void divide(struct DynArr *stack)
   popDynArr(stack);
   double param2 = topDynArr(stack);
   popDynArr(stack);
-  pushDynArr(stack,param1 / param2);
+  pushDynArr(stack,param2 / param1);
 }
 
 /*	param: stack the stack being manipulated
@@ -111,7 +111,7 @@ void power(struct DynArr *stack)
   popDynArr(stack);
   double param2 = topDynArr(stack);
   popDynArr(stack);
-  pushDynArr(stack,pow(param1,param2));
+  pushDynArr(stack,pow(param2,param1));
 }
 
 
