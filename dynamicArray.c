@@ -3,12 +3,14 @@
 #include <stdlib.h>
 #include "dynamicArray.h"
 
+
 struct DynArr
 {
 	TYPE *data;		/* pointer to the data array */
 	int size;		/* Number of elements in the array */
 	int capacity;	/* capacity ofthe array */
 };
+
 
 
 /* ************************************************************************
@@ -91,6 +93,7 @@ void deleteDynArr(DynArr *v)
 */
 void _dynArrSetCapacity(DynArr *v, int newCap)
 {	
+  assert(v!=NULL);
   
   TYPE *oldData = v->data; //create a temporary pointer to the old data array
   int oldSize = v->size;
@@ -125,17 +128,14 @@ int sizeDynArr(DynArr *v)
 	post:	val is in the last utilized position in the array
 */
 void addDynArr(DynArr *v, TYPE val)
-{
-	/* FIXME: You will write this function */
-  assert( v!= NULL);
-  TYPE *oldData = v->data; //create a temporary pointer to the old data array
-  int oldSize = v->size;
-  initDynArr(v, newCap);
-  for(int i=0; i<oldSize; i++){
-    v->data[i] = oldData[i];
-  }
-  free(oldData); //deallocate the memory taken by the old data array
-  v->size = oldSize;
+{ // add assertion, but otherwise this is direct from worksheet 14
+  assert(v!=NULL);
+ /* Check to see if a resize is necessary */  
+  if(v->size >= v->capacity)   
+    _dynArrSetCapacity(v, 2 * v->capacity);   
+  v->data[v->size] = val;  
+  v->size++;
+
 }
 
 /*	Get an element from the dynamic array from a specified position
@@ -151,7 +151,7 @@ void addDynArr(DynArr *v, TYPE val)
 
 TYPE getDynArr(DynArr *v, int pos)
 {
-  assert(position < v->size && pos >= 0);
+  assert(pos < v->size && pos >= 0);
   return v->data[pos];
 }
 
@@ -169,8 +169,8 @@ TYPE getDynArr(DynArr *v, int pos)
 void putDynArr(DynArr *v, int pos, TYPE val)
 {
   assert(v!=NULL);
-  assert(position < v->size && position >= 0);
-  v->data[position] = value;
+  assert(pos < v->size && pos >= 0);
+  v->data[pos] = val;
 
 }
 
@@ -186,7 +186,7 @@ void putDynArr(DynArr *v, int pos, TYPE val)
 void swapDynArr(DynArr *v, int i, int  j)
 {
   assert(v!=NULL);
-  assert(!isEmptyDynArray(v));
+  assert(!isEmptyDynArr(v));
   assert(i < v->size && i >= 0);
   assert(j < v->size && j >= 0);
   TYPE tmp;
@@ -210,7 +210,7 @@ void swapDynArr(DynArr *v, int i, int  j)
 void removeAtDynArr(DynArr *v, int idx)
 {
   assert(v!=NULL);
-  assert(!isEmptyDynArray(v));
+  assert(!isEmptyDynArr(v));
   assert(idx < v->size && idx >= 0);
 
   // just shift everything down
@@ -268,8 +268,8 @@ void pushDynArr(DynArr *v, TYPE val)
 TYPE topDynArr(DynArr *v)
 {
   assert(v!=NULL);
-  assert(!isEmptyDynArray(v));
-  return v->/data[v->size-1];
+  assert(!isEmptyDynArr(v));
+  return v->data[v->size-1];
 }
 
 /* Removes the element on top of the stack 
@@ -283,7 +283,7 @@ TYPE topDynArr(DynArr *v)
 void popDynArr(DynArr *v)
 {
   assert(v!=NULL);
-  assert(!isEmptyDynArray(v));
+  assert(!isEmptyDynArr(v));
   v->size--;
 }
 
@@ -304,10 +304,10 @@ void popDynArr(DynArr *v)
 */
 int containsDynArr(DynArr *v, TYPE val)
 {
-  assert(v!=null);
-  assert(!isEmptyDynArray(v));
-  for (int i = 0; i < da->size; i++)         
-    if (da->data[i] == val)
+  assert(v!=NULL);
+  assert(!isEmptyDynArr(v));
+  for (int i = 0; i < v->size; i++)         
+    if (v->data[i] == val)
       return 1;
   return 0; 
 
@@ -325,9 +325,9 @@ int containsDynArr(DynArr *v, TYPE val)
 */
 void removeDynArr(DynArr *v, TYPE val)
 {
-  assert(v!=null);
-  assert(!isEmptyDynArray(v));
+  assert(v!=NULL);
+  assert(!isEmptyDynArr(v));
   for (int i = 0; i < v->size; i++)
-    if (test == v->data[i])
+    if (val == v->data[i])
       removeAtDynArr(v,i);
 }
