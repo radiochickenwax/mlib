@@ -91,7 +91,6 @@ void deleteDynArr(DynArr *v)
 */
 void _dynArrSetCapacity(DynArr *v, int newCap)
 {	
-	/* FIXME: You will write this function */
   
   TYPE *oldData = v->data; //create a temporary pointer to the old data array
   int oldSize = v->size;
@@ -270,7 +269,7 @@ TYPE topDynArr(DynArr *v)
 {
   assert(v!=NULL);
   assert(!isEmptyDynArray(v));
-  return v->data[v->size-1];
+  return v->/data[v->size-1];
 }
 
 /* Removes the element on top of the stack 
@@ -285,7 +284,7 @@ void popDynArr(DynArr *v)
 {
   assert(v!=NULL);
   assert(!isEmptyDynArray(v));
-  
+  v->size--;
 }
 
 /* ************************************************************************
