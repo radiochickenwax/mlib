@@ -198,6 +198,20 @@ void ln(struct DynArr *stack)
 }
 
 
+/*	param: stack the stack being manipulated
+	pre: the stack contains at least one element
+	post: the top element is popped and 
+	its log_10 is pushed back onto the stack.
+*/
+void log_10(struct DynArr *stack)
+{
+  assert(sizeDynArr(stack) >= 1);
+  double param = topDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,log10(param));
+}
+
+
 double calculate(int numInputTokens, char **inputString)
 {
 	int i;
@@ -244,8 +258,7 @@ double calculate(int numInputTokens, char **inputString)
 		else if(strcmp(s, "ln") == 0)
 		  ln(stack);
 		else if(strcmp(s, "log") == 0)
-			/* FIXME: replace printf with your own function */
-			printf("Log\n");
+		  log_10(stack);
 		else if (isNumber(s, &result))
 		  pushDynArr(stack,result);
 		else 
