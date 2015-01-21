@@ -304,10 +304,12 @@ void popDynArr(DynArr *v)
 */
 int containsDynArr(DynArr *v, TYPE val)
 {
-	/* FIXME: You will write this function */
-	
-	/* FIXME:  You will change this return value */
-	return 1;
+  assert(v!=null);
+  assert(!isEmptyDynArray(v));
+  for (int i = 0; i < da->size; i++)         
+    if (da->data[i] == val)
+      return 1;
+  return 0; 
 
 }
 
@@ -323,5 +325,9 @@ int containsDynArr(DynArr *v, TYPE val)
 */
 void removeDynArr(DynArr *v, TYPE val)
 {
-	/* FIXME: You will write this function */
+  assert(v!=null);
+  assert(!isEmptyDynArray(v));
+  for (int i = 0; i < v->size; i++)
+    if (test == v->data[i])
+      removeAtDynArr(v,i);
 }
