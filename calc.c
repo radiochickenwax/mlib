@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
+#include <assert.h>
 #include "dynamicArray.h"
 
 
@@ -40,7 +42,11 @@ int isNumber(char *s, double *num)
 */
 void add (struct DynArr *stack)
 {
-	/* FIXME: You will write this function */
+  assert(stack->size >= 2);
+  TYPE sum = stack->data[stack->size-1] + stack->data[stack->size-2];
+  popDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,sum);
 }
 
 /*	param: stack the stack being manipulated
@@ -50,7 +56,11 @@ void add (struct DynArr *stack)
 */
 void subtract(struct DynArr *stack)
 {
-	/* FIXME: You will write this function */
+  assert(stack->size >= 2);
+  TYPE difference = stack->data[stack->size-1] - stack->data[stack->size-2];
+  popDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,difference);
 }
 
 /*	param: stack the stack being manipulated
@@ -60,7 +70,11 @@ void subtract(struct DynArr *stack)
 */
 void divide(struct DynArr *stack)
 {
-	/* FIXME: You will write this function */
+  assert(stack->size >= 2);
+  TYPE quotient = stack->data[stack->size-1] / stack->data[stack->size-2];
+  popDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,quotient);
 }
 
 double calculate(int numInputTokens, char **inputString)
