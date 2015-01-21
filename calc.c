@@ -143,6 +143,20 @@ void cube(struct DynArr *stack)
 }
 
 
+/*	param: stack the stack being manipulated
+	pre: the stack contains at least one element
+	post: the top element is popped and 
+	its abs is pushed back onto the stack.
+*/
+void absVal(struct DynArr *stack)
+{
+  assert(sizeDynArr(stack) >= 1);
+  TYPE param = topDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,abs(param));
+}
+
+
 double calculate(int numInputTokens, char **inputString)
 {
 	int i;
@@ -181,8 +195,7 @@ double calculate(int numInputTokens, char **inputString)
 		else if(strcmp(s, "^3") == 0)
 		  cube(stack);
 		else if(strcmp(s, "abs") == 0)
-			/* FIXME: replace printf with your own function */
-			printf("Absolute value\n");
+		  absVal(stack);
 		else if(strcmp(s, "sqrt") == 0)
 			/* FIXME: replace printf with your own function */
 			printf("Square root\n");
