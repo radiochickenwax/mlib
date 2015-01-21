@@ -170,6 +170,19 @@ void squareRoot(struct DynArr *stack)
   pushDynArr(stack,sqrt(param));
 }
 
+/*	param: stack the stack being manipulated
+	pre: the stack contains at least one element
+	post: the top element is popped and 
+	its exp is pushed back onto the stack.
+*/
+void expNat(struct DynArr *stack)
+{
+  assert(sizeDynArr(stack) >= 1);
+  TYPE param = topDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,exp(param));
+}
+
 
 double calculate(int numInputTokens, char **inputString)
 {
@@ -213,8 +226,7 @@ double calculate(int numInputTokens, char **inputString)
 		else if(strcmp(s, "sqrt") == 0)
 		  squareRoot(stack);
 		else if(strcmp(s, "exp") == 0)
-			/* FIXME: replace printf with your own function */
-			printf("Exponential\n");
+		  expNat(stack);
 		else if(strcmp(s, "ln") == 0)
 			/* FIXME: replace printf with your own function */
 			printf("Natural Log\n");
