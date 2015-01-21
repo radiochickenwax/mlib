@@ -45,8 +45,10 @@ void add (struct DynArr *stack)
   printf("sizeDynArr(stack) = %d\n",sizeDynArr(stack));
   assert(sizeDynArr(stack) >= 2);
   TYPE param1 = topDynArr(stack);
+  printf("p1: %f\n",param1);
   popDynArr(stack);
   TYPE param2 = topDynArr(stack);
+  printf("p2: %f\n",param2);
   popDynArr(stack);
   pushDynArr(stack,param1 + param2);
 }
@@ -151,7 +153,10 @@ double calculate(int numInputTokens, char **inputString)
 	 * (1) Check if everything looks OK and produce an error if needed.
 	 * (2) Store the final value in result and print it out.
 	 */
-	
+	if (sizeDynArr(stack) != 1)
+	  printf("Error");
+	else
+	  result = topDynArr(stack);
 	return result;
 }
 
