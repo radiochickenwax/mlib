@@ -65,7 +65,7 @@ void subtract(struct DynArr *stack)
   popDynArr(stack);
   double param2 = topDynArr(stack);
   popDynArr(stack);
-  pushDynArr(stack,param1 - param2);
+  pushDynArr(stack,param2 - param1);
 }
 
 /*	param: stack the stack being manipulated
