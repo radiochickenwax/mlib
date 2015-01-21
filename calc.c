@@ -259,13 +259,14 @@ double calculate(int numInputTokens, char **inputString)
 		  ln(stack);
 		else if(strcmp(s, "log") == 0)
 		  log_10(stack);
-		else if (isNumber(s, &result))
-		  pushDynArr(stack,result);
 		else 
 		{
 			// FIXME: You need to develop the code here (when s is not an operator)
 			// Remember to deal with special values ("pi" and "e")
-		  printf("Error\n");
+		  if (isNumber(s, &result))
+		    pushDynArr(stack,result);
+		  else
+		    printf("Error\n");
 		}
 	}	//end for 
 
