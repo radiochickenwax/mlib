@@ -83,6 +83,22 @@ void divide(struct DynArr *stack)
   pushDynArr(stack,param1 / param2);
 }
 
+/*	param: stack the stack being manipulated
+	pre: the stack contains at least two elements
+	post: the top two elements are popped and 
+	their product is pushed back onto the stack.
+*/
+void multiply(struct DynArr *stack)
+{
+  assert(sizeDynArr(stack) >= 2);
+  TYPE param1 = topDynArr(stack);
+  popDynArr(stack);
+  TYPE param2 = topDynArr(stack);
+  popDynArr(stack);
+  pushDynArr(stack,param1*param2);
+}
+
+
 double calculate(int numInputTokens, char **inputString)
 {
 	int i;
@@ -107,17 +123,16 @@ double calculate(int numInputTokens, char **inputString)
 		//     (1b - II) If s is a number, push it onto the stack
 
 		if(strcmp(s, "+") == 0)
-			add(stack);
+		  add(stack);
 		else if(strcmp(s,"-") == 0)
-			subtract(stack);
+		  subtract(stack);
 		else if(strcmp(s, "/") == 0)
-			divide(stack);
+		  divide(stack);
 		else if(strcmp(s, "x") == 0)
-			/* FIXME: replace printf with your own function */
-			printf("Multiplying\n");
+		  multiply(stack);
 		else if(strcmp(s, "^") == 0)
-			/* FIXME: replace printf with your own function */
-			printf("Power\n");
+		  /* FIXME: replace printf with your own function */
+		  printf("Power\n");
 		else if(strcmp(s, "^2") == 0)
 			/* FIXME: replace printf with your own function */
 			printf("Squaring\n");
