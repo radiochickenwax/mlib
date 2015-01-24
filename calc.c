@@ -43,13 +43,13 @@ int isNumber(char *s, double *num)
 */
 void add (struct DynArr *stack)
 {
-  printf("sizeDynArr(stack) = %d\n",sizeDynArr(stack));
+  // printf("sizeDynArr(stack) = %d\n",sizeDynArr(stack));
   assert(sizeDynArr(stack) >= 2);
   double param1 = topDynArr(stack);
-  printf("p1: %f\n",param1);
+  // printf("p1: %f\n",param1);
   popDynArr(stack);
   double param2 = topDynArr(stack);
-  printf("p2: %f\n",param2);
+  // printf("p2: %f\n",param2);
   popDynArr(stack);
   pushDynArr(stack,param1 + param2);
 }
