@@ -156,6 +156,42 @@ Increasing the capacity by a constant:
    avoid this? (Hint: You may assume that the initial capacity of the
    array is N/2.) 
 
+The clearest and most general explanation for this I could find was
+from the Canvas discussion board, which went like the following:
+
+=====================================================================
+We perform n operations on a table T, where n is an exact power
+of 2. The first n/2 operations  are insertions, which by our previous
+analysis cost a total of  (n). At the end of this sequence of
+insertions, num[T] = size[T] =  n/2. For the second n/2 operations, we
+perform the following  sequence:
+
+I, D, D, I, I, D, D, I, I,... ,
+
+ where I stands for an insertion and D stands for a deletion. The
+ first insertion causes an expansion of the table to size n. The two
+ following deletions cause a contraction of the table back to size
+ n/2. Two further insertions cause another expansion, and so
+ forth. The cost of each expansion and contraction is O(n), and there
+ are O(n) of them. Thus, the total cost of the n operations is O(n^2),
+ and the amortized cost of  an operation is O(n).
+======================================================================
+
+No matter how I look at the problem, the O(n^2) costs only occur for
+alternating sequences.  One way around this is to avoid alternating
+sequences somehow (using a stack perhaps to record the last two
+transaction types (push, pop) to predict if the array will be 1/2
+full and pad the capacity against such behavior by calling an
+additional O(1) push or pop to guard against it).   
+
+Another possibility is to use a different size check instead of n/2
+-> say n/4.     
+
+The following analysis examines the assumptions of the problem, and
+the breaks down the amortized analysis in more detail. 
+
+
+
 ASSUMPTION 1:  The array only shrinks when pop() is called.  
   let n = 4 // cap = 4, size = 2
   push() // cap = 4, size = 3, cost = 1
