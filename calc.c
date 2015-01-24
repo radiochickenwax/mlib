@@ -263,10 +263,11 @@ double calculate(int numInputTokens, char **inputString)
 		{
 			// FIXME: You need to develop the code here (when s is not an operator)
 			// Remember to deal with special values ("pi" and "e")
-		  if (isNumber(s, &result))
+		  assert(isNumber(s, &result));
+		  //if (isNumber(s, &result))
 		    pushDynArr(stack,result);
-		  else
-		    printf("Error\n");
+		    ///else
+		    //printf("Error\n");
 		}
 	}	//end for 
 
