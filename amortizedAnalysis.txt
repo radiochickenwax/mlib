@@ -208,6 +208,9 @@ if (size < 0.5 capacity)
  for (0.5 capacity times) 
    pop()
 
+
+I couldn't find a way to show that this interpretation ever reaches O(n^2).
+
 The array doubles its capacity when full, and shrinks by 1/2 when
 it's 1/2 full or less.  This could mean that it only shrinks when a
 pop is called, or it could mean that it pops 1/2 of the capacity off
