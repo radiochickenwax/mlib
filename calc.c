@@ -6,6 +6,7 @@
 #include "dynamicArray.h"
 
 
+
 /* param: s the string
    param: num a pointer to double
    returns: true (1) if s is a number else 0 or false.
@@ -263,11 +264,18 @@ double calculate(int numInputTokens, char **inputString)
 		{
 			// FIXME: You need to develop the code here (when s is not an operator)
 			// Remember to deal with special values ("pi" and "e")
-		  assert(isNumber(s, &result));
-		  //if (isNumber(s, &result))
+		  //assert(isNumber(s, &result));  // pi and e do not pass the isNumber() function
+		  if (isNumber(s, &result))
 		    pushDynArr(stack,result);
-		    ///else
-		    //printf("Error\n");
+		  else
+		    {
+		      if (strcmp(s,"pi") == 0)
+			pushDynArr(stack,acos(-1));  // pi = acos(-1)
+		      else if (strcmp(s,"e") == 0)
+			pushDynArr(stack,exp(1)); // e = exp(1)
+		      else
+			printf("Invalid Input \"%s\" \n", s);
+		    }
 		}
 	}	//end for 
 
@@ -276,7 +284,7 @@ double calculate(int numInputTokens, char **inputString)
 	 * (2) Store the final value in result and print it out.
 	 */
 	if (sizeDynArr(stack) != 1)
-	  printf("Error");
+	  printf("Stack size  != 1\n");
 	else
 	  result = topDynArr(stack);
 	return result;
