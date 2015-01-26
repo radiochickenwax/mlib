@@ -37,6 +37,8 @@ int main(int argc, char* argv[]) {
 	long m1, m2;
 	/* memory used BEFORE creating DynArr */
 	m1 = getMemoryUsage();
+
+	printf("mem before: %ld\n",m1);
 	#endif
 
 	if( argc != 2 ) return 0;
@@ -46,12 +48,15 @@ int main(int argc, char* argv[]) {
 		
 	for( i = 0 ; i < n; i++) {
 		addDynArr(b, (TYPE)i); /*Add elements*/
-		printf("adding %d\n",(TYPE)i);
 	}		
+
+	
+
 	
 	#ifdef MEMORY_TEST_INCLUDED
 	/* memory used AFTER creating DynArr */
 	m2 = getMemoryUsage();  
+	printf("mem after: %ld\n",m2);
 	printf("Memory used by DynArr: %ld KB \n", m2-m1);
 	#endif
 	
