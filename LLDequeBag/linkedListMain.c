@@ -29,7 +29,7 @@ double getMilliseconds() {
 
 int main(int argc, char* argv[]){
 
-  printf("hello world\n");
+  //printf("hello world\n");
   struct linkedList* b;
   int n, i;
   double t1, t2;
@@ -41,7 +41,7 @@ int main(int argc, char* argv[]){
   m1 = getMemoryUsage();
 #endif
   
-  printf("hello world\n");
+  //printf("hello world\n");
   if( argc != 2 ) return 0;
   
   b = createLinkedList(); 
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]){
     addList(b, (TYPE)i);/*Add elements*/
   }	
   
-  printf("never got here?\n");
+  //printf("never got here?\n");
 
 #ifdef MEMORY_TEST_INCLUDED
   /* memory used AFTER creating LinkedList */
