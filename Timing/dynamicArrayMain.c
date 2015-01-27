@@ -14,12 +14,12 @@
 
 /* Function to get current memory usage in KB (Max Resident Set Size) */
 long getMemoryUsage() { 
-  printf("getting mem\n");
-	int who = RUSAGE_SELF; 
-	struct rusage usage; 
-	int ret;
-	ret = getrusage(who, &usage);	
-	return usage.ru_maxrss; 
+  //printf("getting mem\n");
+  int who = RUSAGE_SELF; 
+  struct rusage usage; 
+  int ret;
+  ret = getrusage(who, &usage);	
+  return usage.ru_maxrss; 
 }
 #endif
 
@@ -49,9 +49,7 @@ int main(int argc, char* argv[]) {
 	for( i = 0 ; i < n; i++) {
 		addDynArr(b, (TYPE)i); /*Add elements*/
 	}		
-
-	
-
+       
 	
 	#ifdef MEMORY_TEST_INCLUDED
 	/* memory used AFTER creating DynArr */
