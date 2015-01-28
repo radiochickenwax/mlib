@@ -101,7 +101,7 @@ void addFrontList(struct linkedList *lst, TYPE e)
 
 void addBackList(struct linkedList *lst, TYPE e) {
   assert(lst != NULL);
-  _addLinkBefore(lst, lst->lastLink->prev,e);  
+  _addLinkBefore(lst, lst->lastLink,e);  
 }
 
 /*
