@@ -31,7 +31,7 @@ void _initList (struct linkedList *lst) {
   lst->firstLink = malloc(sizeof(struct DLink));
   assert(lst->firstLink != 0);
   lst->lastLink = malloc(sizeof(struct DLink));
-  assert(lst->lastLink);
+  assert(lst->lastLink != 0);
   lst->firstLink->next = lst->lastLink;
   lst->lastLink->prev = lst->firstLink;
   lst->size = 0;
