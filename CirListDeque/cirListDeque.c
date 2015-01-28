@@ -75,6 +75,37 @@ struct DLink * _createLink (TYPE val)
   return link;
 }
 
+
+/*	Returns boolean (encoded as an int) demonstrating whether or not
+	the specified value is in the collection
+	true = 1
+	false = 0
+
+	param:	lst		pointer to the bag
+	param:	e		the value to look for in the bag
+	pre:	lst is not null
+	pre:	lst is not empty
+	post:	no changes to the bag
+*/
+int containsCirListDeque (struct cirListDeque *lst, TYPE e) {
+  assert(lst != NULL);
+  assert( !isEmptyCirListDeque(lst) );
+  
+  struct DLink* i = lst->Sentinel->next; // placeholder
+  // traverse list
+  while (i != lst->Sentinel)
+    {
+      if ( i->value == e )
+	return 1;
+      else
+	i = i->next;
+    }
+  return 0; // default return value
+  
+}
+
+
+
 /* Adds a link after another link
 
 	param: 	q		pointer to the deque
