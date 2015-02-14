@@ -124,6 +124,8 @@ int sizeBSTree(struct BSTree *tree) { return tree->cnt; }
  */
 struct Node *_addNode(struct Node *cur, TYPE val)
 {
+  //assert(cur != NULL);
+
   if (cur == NULL)
     {
       struct Node* new = malloc(sizeof(struct Node));
@@ -172,7 +174,18 @@ void addBSTree(struct BSTree *tree, TYPE val)
 /*----------------------------------------------------------------------------*/
 int containsBSTree(struct BSTree *tree, TYPE val)
 {
-	/*write this*/
+  struct Node* new = tree->root;
+  int comparison;
+  while (new != NULL)
+    {
+      comparison = compare(new->val,val);
+      if (comparison == 0) 
+	return 1;
+      else if (comparison == -1) 
+	new = new->right;
+      else if (comparison == 1) 
+	new = new->left;
+    }
   return 0;
 }
 
