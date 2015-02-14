@@ -125,7 +125,30 @@ int sizeBSTree(struct BSTree *tree) { return tree->cnt; }
 struct Node *_addNode(struct Node *cur, TYPE val)
 {
 	/*write this*/
-	return NULL;
+  // return NULL;
+
+  struct Node* new;
+  if (cur == NULL) // first creation 
+    {
+      //printf("creating new node: %d\n",newValue);
+      new = malloc(sizeof(struct Node));
+      assert(new != 0);
+      new->val = val;
+      new->left = 0;
+      new->right = 0;
+      return new;
+    }
+  else if (val < cur->val) // push newValue left of current
+    {
+      //printf("%d < %d pushing left:\n",newValue,current->value);
+      cur->left = _addNode(cur->left,val);
+    }
+  // else if (newValue > current->value) // push newValue right of current
+  else
+    {
+      //printf("%d >= %d pushing right:\n",newValue,current->value);
+      cur->right = _addNode(cur->right,val);
+    }
 }
 
 /*

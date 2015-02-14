@@ -163,7 +163,7 @@ fucntion to test that the BST contains the elements that we added to it
 */
 void testContainsBSTree() {
     struct BSTree *tree = buildBSTTree();
-    
+    printf("testing tree\n");
     struct data myData1;
 	struct data myData2;
 	struct data myData3;
@@ -270,7 +270,7 @@ Main function for testing different fucntions of the Assignment#4.
 */
 
 int main(int argc, char *argv[]){	
-	
+  printf("starting tests\n");
     testAddNode();
 	printf("\n");
     testContainsBSTree();
