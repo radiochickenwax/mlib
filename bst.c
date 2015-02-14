@@ -251,9 +251,26 @@ struct Node *_removeLeftMost(struct Node *cur)
 /*----------------------------------------------------------------------------*/
 struct Node *_removeNode(struct Node *cur, TYPE val)
 {
-	/*write this*/
-		return NULL;
+  //assert(containsBSTree(cur,val));  // can't use node as a tree.  Would need to redesign the struct which I assume isn't allowed.
+  assert(cur!=NULL);
+  assert(val!=NULL);
 
+  if (compare(val, cur->val) == 0)
+    {
+      if (cur->right == 0)
+	return cur->left;
+      else
+        {
+	  cur->val = _leftMost(cur->right);
+	  cur->right = _removeLeftMost(cur->right);
+        }
+    }
+  else if (compare(val, cur->val) == -1)
+    cur->left = _removeNode(cur->left, val);
+  else if (compare(val, cur->val) == 1)
+    cur->right = _removeNode(cur->right, val);
+  
+  return cur;
 }
 /*
  function to remove a value from the binary search tree
@@ -547,8 +564,8 @@ int main(int argc, char *argv[]){
   printf("\n");
   testRemoveLeftMost();
 	
-	printf("\n");
-    //testRemoveNode();
+  printf("\n");
+  testRemoveNode();
     
 	
 	return 0;
