@@ -224,8 +224,20 @@ Note:  If you do this iteratively, the above hint does not apply.
 /*----------------------------------------------------------------------------*/
 struct Node *_removeLeftMost(struct Node *cur)
 {
-	/*write this*/
-	return NULL;
+  assert(cur!=NULL);
+
+  struct Node *temp;
+  
+  if (cur->left != NULL)
+    {
+      cur->left = _removeLeftMost(cur->left);
+      return cur;
+    }
+  
+  temp = cur->right;
+  free(cur);
+  
+  return temp;
 }
 /*
  recursive helper function to remove a node from the tree
@@ -532,8 +544,8 @@ int main(int argc, char *argv[]){
   printf("\n");
   testLeftMost();
 	
-	printf("\n");
-    //testRemoveLeftMost();
+  printf("\n");
+  testRemoveLeftMost();
 	
 	printf("\n");
     //testRemoveNode();
