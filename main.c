@@ -13,6 +13,12 @@ int containsBSTree(struct BSTree *tree, TYPE val)
 TYPE _leftMost(struct Node *cur)
 struct Node *_removeLeftMost(struct Node *cur)
 struct Node *_removeNode(struct Node *cur, TYPE val)
+
+Note that this file isn't included in the makefile.
+
+gcc -g -Wall -std=c99 -c main.c -o main.o
+gcc -g -Wall -std=c99 main.o bst.o compare.o -o main
+
 */
 
 
@@ -271,6 +277,7 @@ Main function for testing different fucntions of the Assignment#4.
 
 int main(int argc, char *argv[]){	
   printf("starting tests\n");
+  /*
     testAddNode();
 	printf("\n");
     testContainsBSTree();
@@ -282,6 +289,7 @@ int main(int argc, char *argv[]){
     testRemoveNode();
     return 0;
 	getch();
+  */
 
 }
 

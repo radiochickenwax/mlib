@@ -124,31 +124,22 @@ int sizeBSTree(struct BSTree *tree) { return tree->cnt; }
  */
 struct Node *_addNode(struct Node *cur, TYPE val)
 {
-	/*write this*/
-  // return NULL;
-
-  struct Node* new;
-  if (cur == NULL) // first creation 
+  if (cur == NULL)
     {
-      //printf("creating new node: %d\n",newValue);
-      new = malloc(sizeof(struct Node));
+      struct Node* new = malloc(sizeof(struct Node));
       assert(new != 0);
       new->val = val;
       new->left = 0;
       new->right = 0;
+      
       return new;
     }
-  else if (val < cur->val) // push newValue left of current
-    {
-      //printf("%d < %d pushing left:\n",newValue,current->value);
-      cur->left = _addNode(cur->left,val);
-    }
-  // else if (newValue > current->value) // push newValue right of current
+  else if (compare(val, cur->val) == -1)
+    cur->left = _addNode(cur->left, val);
   else
-    {
-      //printf("%d >= %d pushing right:\n",newValue,current->value);
-      cur->right = _addNode(cur->right,val);
-    }
+    cur->right = _addNode(cur->right, val);
+  
+  return cur;
 }
 
 /*
@@ -182,7 +173,7 @@ void addBSTree(struct BSTree *tree, TYPE val)
 int containsBSTree(struct BSTree *tree, TYPE val)
 {
 	/*write this*/
-		return 0;
+  return 0;
 }
 
 /*
@@ -358,8 +349,8 @@ void testAddNode() {
     else printf("addNode() test: PASS when adding 50 as root\n");
     
     
-	myData2.number = 13;
-	myData2.name = "lefty";
+    myData2.number = 13;
+    myData2.name = "lefty";
     addBSTree(tree, &myData2);
     
     //check the position of the second element that is added to the BST tree
@@ -515,7 +506,7 @@ int main(int argc, char *argv[]){
 
    //After implementing your code, please uncommnet the following calls to the test functions and test your code 
 
-   // testAddNode();
+  testAddNode();
 	
 	printf("\n");
    //	testContainsBSTree();
