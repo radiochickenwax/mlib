@@ -174,6 +174,7 @@ void addBSTree(struct BSTree *tree, TYPE val)
 /*----------------------------------------------------------------------------*/
 int containsBSTree(struct BSTree *tree, TYPE val)
 {
+  assert(tree!=NULL);
   struct Node* new = tree->root;
   int comparison;
   while (new != NULL)
@@ -200,8 +201,12 @@ int containsBSTree(struct BSTree *tree, TYPE val)
 /*----------------------------------------------------------------------------*/
 TYPE _leftMost(struct Node *cur)
 {
-	/*write this*/
-	return NULL;
+  assert(cur!=NULL);
+  while(cur->left != 0)
+    {
+      cur = cur->left;
+    }
+  return cur->val;
 }
 
 
@@ -521,11 +526,11 @@ int main(int argc, char *argv[]){
 
   testAddNode();
 	
-	printf("\n");
-   //	testContainsBSTree();
+  printf("\n");
+  testContainsBSTree();
 	
-	printf("\n");
-    //testLeftMost();
+  printf("\n");
+  testLeftMost();
 	
 	printf("\n");
     //testRemoveLeftMost();
