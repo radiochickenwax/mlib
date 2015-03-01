@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "dynamicArray.h"
 
+
+
 struct DynArr
 {
 	TYPE *data;		/* pointer to the data array */
@@ -434,7 +436,12 @@ void _adjustHeap(DynArr *heap, int max, int pos);
 int _smallerIndexHeap(DynArr *heap, int i, int j)
 {
   /* FIXME */
-  return 0;
+  assert(i < sizeDynArr(heap));
+  assert(j < sizeDynArr(heap));
+  if (compare(getDynArr(heap, i), getDynArr(heap, j)) == -1)
+    return i;
+  else
+    return j;
 }
 
 /*	Get the first node, which has the min priority, from the heap
@@ -448,7 +455,9 @@ TYPE getMinHeap(DynArr *heap)
   /* FIXME */
 
   /* Temporary returning NULL */
-  return NULL;
+  // return NULL;
+  assert(!isEmptyDynArr(heap));
+  return getDynArr(heap,0);
 }
 
 /*	Add a node to the heap
@@ -458,9 +467,27 @@ TYPE getMinHeap(DynArr *heap)
 	pre:	heap is not null
 	post:	node is added to the heap
 */
-void addHeap(DynArr *heap, TYPE val)
+void addHeap(DynArr *heap, TYPE node)
 {
     /* FIXME */
+  assert(heap != NULL);
+
+  int currIdx;
+  int parIdx;
+  TYPE parVal;
+  
+  addDynArr(heap,node);  
+  currIdx = sizeDynArr(heap) - 1;
+  parIdx = (currIdx - 1) / 2;
+  parVal = heap->data[parIdx];
+
+  while (currIdx > 0 && compare(node,parVal) == -1)
+    {
+      swapDynArr(heap, currIdx, parIdx);
+      currIdx = parIdx;
+      parIdx = (currIdx -1) / 2;
+      parVal = heap->data[parIdx];
+    }
 
 }
 
@@ -475,6 +502,32 @@ void addHeap(DynArr *heap, TYPE val)
 void _adjustHeap(DynArr *heap, int max, int pos)
 {
    /* FIXME */
+  assert(max <= sizeDynArr(heap));
+  int left = (2 * pos) + 1;
+  int right = (2 * pos) + 2;
+  int small;
+  
+  if(right < max)
+    {
+      small = _smallerIndexHeap(heap, left, right);
+      // can't alter type.h, but this would have been cleaner
+      // if(heap->data[small].priority < heap->data[pos].priority)
+      if (compare(getDynArr(heap,small),getDynArr(heap,pos) == -1))
+	{
+	  swapDynArr(heap, small, pos); 
+	  _adjustHeap(heap, max, small);
+	}
+    }
+  else if(left < max)
+    {
+      // here is the type.h problem again
+      // if(heap->data[left].priority < heap->data[pos].priority)
+      if (compare(getDynArr(heap,left),getDynArr(heap,pos) == -1))
+	{
+	  swapDynArr(heap, left, pos);
+	  _adjustHeap(heap, max, left);
+	}
+    }
 }
 
 /*	Remove the first node, which has the min priority, from the heap
@@ -486,7 +539,11 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 void removeMinHeap(DynArr *heap)
 {
    /* FIXME */
+  assert(!isEmptyDynArr(heap));
 
+  heap->data[0] = getDynArr(heap, (sizeDynArr(heap) - 1));
+  heap->size--;
+  _adjustHeap(heap, (sizeDynArr(heap) - 1), 0);
 }
 
 /* builds a heap from an arbitrary dynArray
@@ -499,6 +556,15 @@ void removeMinHeap(DynArr *heap)
 void _buildHeap(DynArr *heap)
 {
     /* FIXME */
+  assert(!isEmptyDynArr(heap));
+
+  int max = heap->size - 1;
+
+  for(int i = (max - 1) / 2; i >= 0; i--)
+    {
+      _adjustHeap(heap, max, i);
+    }
+  
 }
 /*
     In-place sort of the heap
@@ -511,6 +577,16 @@ void _buildHeap(DynArr *heap)
 void sortHeap(DynArr *heap)
 {
    /* FIXME */
+  assert(!isEmptyDynArr(heap));
+  
+  int max = heap->size - 1;
+  _buildHeap(heap);
+
+  for(int i = max; i >= 0; i--)
+    {
+      swapDynArr(heap, i, 0);
+      _adjustHeap(heap, i-1, 0);
+    }
 
 }
 
