@@ -502,6 +502,7 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 {
    /* FIXME */
   assert(max <= sizeDynArr(heap));
+
   int left = (2 * pos) + 1;
   int right = (2 * pos) + 2;
   int small;
@@ -559,10 +560,8 @@ void _buildHeap(DynArr *heap)
 
   int max = heap->size - 1;
 
-  for(int i = (max - 1) / 2; i >= 0; i--)
-    {
-      _adjustHeap(heap, max, i);
-    }
+  for(int i = max/ 2; i >= 0; i--)
+    _adjustHeap(heap, max, i);
   
 }
 /*
@@ -578,13 +577,13 @@ void sortHeap(DynArr *heap)
    /* FIXME */
   assert(!isEmptyDynArr(heap));
   
+  //_buildHeap(heap);
   int max = heap->size - 1;
-  _buildHeap(heap);
-
-  for(int i = max; i >= 0; i--)
+  
+  for(int i = max; i > 0; i--)
     {
       swapDynArr(heap, i, 0);
-      _adjustHeap(heap, i-1, 0);
+      _adjustHeap(heap, i, 0);
     }
 
 }
