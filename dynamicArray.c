@@ -467,26 +467,25 @@ TYPE getMinHeap(DynArr *heap)
 	pre:	heap is not null
 	post:	node is added to the heap
 */
-void addHeap(DynArr *heap, TYPE node)
+void addHeap(DynArr *heap, TYPE val)
 {
     /* FIXME */
   assert(heap != NULL);
 
-  int currIdx;
-  int parIdx;
-  TYPE parVal;
-  
-  addDynArr(heap,node);  
-  currIdx = sizeDynArr(heap) - 1;
-  parIdx = (currIdx - 1) / 2;
-  parVal = heap->data[parIdx];
+  int pos = sizeDynArr(heap);
+  addDynArr(heap, val);
 
-  while (currIdx > 0 && compare(node,parVal) == -1)
+  int parent;
+
+    while (pos != 0)
     {
-      swapDynArr(heap, currIdx, parIdx);
-      currIdx = parIdx;
-      parIdx = (currIdx -1) / 2;
-      parVal = heap->data[parIdx];
+        parent = (pos - 1) / 2;
+        if (compare(getDynArr(heap, pos), getDynArr(heap, parent)) == -1)
+        {
+            swapDynArr(heap, parent, pos);
+            pos = parent;
+        }
+        else return;
     }
 
 }
