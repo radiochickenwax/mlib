@@ -16,7 +16,10 @@
 Task* createTask (int priority, char *desc)
 {
 		/* FIXME */
-
+  struct Task *temp = malloc(sizeof(struct Task));
+  strcpy(temp->description, desc);
+  temp->priority = priority;
+  return temp;
 }
 
 /*  Save the list to a file
@@ -96,7 +99,21 @@ void loadList(DynArr *heap, FILE *filePtr)
 */
 void printList(DynArr *heap)
 {
-    /* FIXME: Write this */
+  /* FIXME: Write this */
+
+  // create a new copy of the heap to prevent removal
+  DynArr *tmpHeap = createDynArr(sizeDynArr(heap));
+  copyDynArr(heap, tmpHeap);
+  
+  while (sizeDynArr(tmpHeap) > 0)
+    {
+      // get first value of min priority
+      TYPE min = getMinHeap(tmpHeap);
+      print_type(min);
+      removeMinHeap(tmpHeap); // remove min, to get next
+    }
+
+  freeDynArr(tmpHeap);
 }
 
 /*  Delete the list
@@ -143,7 +160,25 @@ void deleteList(DynArr *heap)
  */
 int compare(TYPE left, TYPE right)
 {
-    /*FIXME: write this*/
+  /*FIXME: write this*/
+  assert(left != NULL);
+  assert(right != NULL);
+
+  Task *ml, *mr;
+  
+  ml = (Task *) left;
+  mr = (Task *) right;
+  
+  if (ml->priority < mr->priority)
+    {
+      return -1;
+    }
+  else if (ml->priority > mr->priority)
+    {
+      return 1;
+    }
+  else
+    return 0;
 }
 
 /*Define this function, type casting the value of void * to the desired type*/

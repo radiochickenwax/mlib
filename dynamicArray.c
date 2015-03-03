@@ -512,7 +512,7 @@ void _adjustHeap(DynArr *heap, int max, int pos)
       small = _smallerIndexHeap(heap, left, right);
       // can't alter type.h, but this would have been cleaner
       // if(heap->data[small].priority < heap->data[pos].priority)
-      if (compare(getDynArr(heap,small),getDynArr(heap,pos) == -1))
+      if (compare(getDynArr(heap,small),getDynArr(heap,pos)) == -1)
 	{
 	  swapDynArr(heap, small, pos); 
 	  _adjustHeap(heap, max, small);
@@ -522,7 +522,7 @@ void _adjustHeap(DynArr *heap, int max, int pos)
     {
       // here is the type.h problem again
       // if(heap->data[left].priority < heap->data[pos].priority)
-      if (compare(getDynArr(heap,left),getDynArr(heap,pos) == -1))
+      if (compare(getDynArr(heap,left),getDynArr(heap,pos)) == -1)
 	{
 	  swapDynArr(heap, left, pos);
 	  _adjustHeap(heap, max, left);
