@@ -55,7 +55,26 @@ hashMap *createMap(int tableSize) {
  */
 void _freeMap (struct hashMap * ht)
 {  
-	/*write this*/		
+  /*write this*/	
+  assert (ht != 0);
+  
+  hashLink *cur = NULL;
+  hashLink *next = NULL;
+  
+  for(int i = 0; i < ht->tableSize; i++)
+    {
+      cur = ht->table[i];
+      while(cur != NULL)
+        {
+	  next = cur->next;
+	  free(cur->key);
+	  free(cur);
+	  cur = next;
+        }
+      free(ht->table);
+      ht->tableSize = 0;
+      ht->count = 0;
+    }
 }
 
 /* Deallocate buckets and the hash map.*/
@@ -72,10 +91,35 @@ Resizes the hash table to be the size newTableSize
 */
 void _setTableSize(struct hashMap * ht, int newTableSize)
 {
-	/*write this*/			
+  /*write this*/	
+  assert(ht != NULL);
+  
+  // general idea
+  // create a new table at the new size, copy all elements over, destroy old table
+  
+  hashLink **old = ht->table; // store the old table
+  int oldSize = ht->tableSize; 
+
+  // init the new map 
+  _initMap(ht,newTableSize); 
+
+  // copy the old elements back
+  for (int i=0; i < oldSize; i++)
+    {
+      hashLink *this = old[i];
+      while (this != NULL)
+	{
+	  insertMap(ht, this->key, this->value);
+	  hashLink *last = this;
+	  this = this->next;
+	  free(last);
+	}
+    }
+  free(old);
+
 }
 
-/*
+/* 
  insert the following values into a hashLink, you must create this hashLink but
  only after you confirm that this key does not already exist in the table. For example, you
  cannot have two hashLinks for the word "taco".
@@ -89,7 +133,33 @@ void _setTableSize(struct hashMap * ht, int newTableSize)
  */
 void insertMap (struct hashMap * ht, KeyType k, ValueType v)
 {  
-	/*write this*/	
+  /*write this*/	
+  assert(ht != NULL);
+  assert(k != NULL);  // k is char*, v is int
+
+  int idx = findKeyIndex(ht,k);
+  
+  // if k is already in ht, replace value
+  if (containsKey(ht,k))
+    {
+      ht->table[ idx ]->value = v;
+    }
+
+  else // k isn't there so need to make a new link, fill it, add to table
+    {
+      struct hashLink *new = malloc(sizeof(struct hashLink)); // new link
+
+      new->value = v; // fill it
+      new->key = k;
+      new->next = ht->table[idx];
+      
+      ht->table[ idx ] = new;  // add to table
+      ht->count++;
+    }
+  
+  // monitor load factor 
+  if (tableLoad(ht) > LOAD_FACTOR_THRESHOLD)
+    _setTableSize(ht, ht->tableSize * 2);
 }
 
 /*
@@ -102,8 +172,11 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
  */
 ValueType* atMap (struct hashMap * ht, KeyType k)
 { 
-	/*write this*/
-	return NULL;
+  /*write this*/
+  assert (ht != NULL);
+  
+  struct hashLink *ptr = ht->table[ findKey(ht,k) ];
+  return NULL;
 }
 
 /*
