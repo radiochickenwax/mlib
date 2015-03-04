@@ -49,6 +49,26 @@ hashMap *createMap(int tableSize) {
 	return ht;
 }
 
+
+
+/*function to find key index using either stringHash1 or stringHash2*/
+int _findKey (struct hashMap *ht, KeyType k)
+{
+    assert (ht != NULL);
+
+    int index;
+
+    if (HASHING_FUNCTION == 1)
+        index = stringHash1(k) % ht->tableSize;
+    else if (HASHING_FUNCTION == 2)
+        index = stringHash2(k) % ht->tableSize;
+
+    if (index < 0)
+        index += ht->tableSize;
+
+    return (index);
+}
+
 /*
  Free all memory used by the buckets.
  Note: Before freeing up a hashLink, free the memory occupied by key and value
@@ -137,12 +157,23 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
   assert(ht != NULL);
   assert(k != NULL);  // k is char*, v is int
 
-  int idx = findKeyIndex(ht,k);
+  int index;  // get index from k in ht
+
+  if (HASHING_FUNCTION == 1)
+    index = stringHash1(k) % ht->tableSize;
+  else if (HASHING_FUNCTION == 2)
+    index = stringHash2(k) % ht->tableSize;
+  
+  index %= ht->tableSize; // wrap around if necessary
+
+  if (index < 0)  // ensure positive index
+    index += ht->tableSize;
+  
   
   // if k is already in ht, replace value
   if (containsKey(ht,k))
     {
-      ht->table[ idx ]->value = v;
+      ht->table[ index ]->value = v;
     }
 
   else // k isn't there so need to make a new link, fill it, add to table
@@ -151,9 +182,9 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
 
       new->value = v; // fill it
       new->key = k;
-      new->next = ht->table[idx];
+      new->next = ht->table[ index ];
       
-      ht->table[ idx ] = new;  // add to table
+      ht->table[ index ] = new;  // add to table
       ht->count++;
     }
   
@@ -174,8 +205,41 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
 { 
   /*write this*/
   assert (ht != NULL);
+  assert (k != NULL);
+
+  int index;  // get index from k in ht
+
+  if (HASHING_FUNCTION == 1)
+    index = stringHash1(k) % ht->tableSize;
+  else if (HASHING_FUNCTION == 2)
+    index = stringHash2(k) % ht->tableSize;
   
-  struct hashLink *ptr = ht->table[ findKey(ht,k) ];
+  index %= ht->tableSize; // wrap around if necessary
+
+  if (index < 0)  // ensure positive index
+    index += ht->tableSize;
+  
+  
+  // if k is already in ht, replace value
+  if (containsKey(ht,k))
+    {
+      ht->table[ index ]->value = v;
+    }
+
+  // get a pointer to the table at the generated index
+  struct hashLink *ptr = ht->table[ index ];
+  while(ptr != NULL)
+    {
+      /*
+	strcmp (a,b) returns zero if a == b
+	returns the difference of the int value 
+	of first mismatched chars otherwise.
+       */
+      if (strcmp(ptr->key,k) == 0)
+	return (&ptr->value);  
+      ptr = ptr->next;
+    }
+  // else
   return NULL;
 }
 
@@ -185,8 +249,38 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
  */
 int containsKey (struct hashMap * ht, KeyType k)
 {  
-	/*write this*/
-	return 0;
+  /*write this*/
+  assert(ht!=NULL);
+
+int index;  // get index from k in ht
+
+ if (HASHING_FUNCTION == 1)
+   index = stringHash1(k) % ht->tableSize;
+ else if (HASHING_FUNCTION == 2)
+   index = stringHash2(k) % ht->tableSize;
+ 
+ index %= ht->tableSize; // wrap around if necessary
+ 
+ if (index < 0)  // ensure positive index
+   index += ht->tableSize;
+ 
+ // create pointer to index
+ struct hashLink* ptr = ht->table[ index ];
+ 
+ 
+ // if k is already in ht, replace value
+ if (containsKey(ht,k))
+   {
+     ht->table[ index ]->value = v;
+   }
+ 
+ while (ptr != NULL)
+   {
+     if (strcmp(ptr->key,k) == 0)
+       return 1;
+     ptr = ptr->next;
+   }
+  return 0;
 }
 
 /*
@@ -197,7 +291,50 @@ int containsKey (struct hashMap * ht, KeyType k)
  */
 void removeKey (struct hashMap * ht, KeyType k)
 {  
-	/*write this*/	
+  /*write this*/	
+  assert(ht!=NULL);
+  
+  int index;  // get index from k in ht
+  
+  if (HASHING_FUNCTION == 1)
+    index = stringHash1(k) % ht->tableSize;
+  else if (HASHING_FUNCTION == 2)
+    index = stringHash2(k) % ht->tableSize;
+  
+  index %= ht->tableSize; // wrap around if necessary
+  
+  if (index < 0)  // ensure positive index
+    index += ht->tableSize;
+  
+  // create pointer to index
+  struct hashLink* cur = ht->table[ index ];
+  
+  while (cur != NULL)
+    {
+      if (strcmp(cur->key, k) == 0 )
+        {
+	  struct hashLink *temp = cur->next;
+	  free (cur->key);
+	  free (cur);
+	  ht->table[_findKey( ht, k ) ] = temp;
+	  ht->count--;
+	  return;
+        }
+      
+      while (cur->next != NULL )
+        {
+	  if (strcmp(cur->next->key, k) == 0)
+            {
+	      struct hashLink *temp = cur->next->next;
+	      free(cur->next->key);
+	      free(cur->next);
+	      cur->next = temp;
+	      ht->count--;
+	      return;
+            }
+	  cur = cur->next;
+        }
+    }
 }
 
 /*
