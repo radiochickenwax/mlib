@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "hashMap.h"
+#include <string.h>
 
 /*
  the getWord function takes a FILE pointer and returns you a string which was
@@ -42,14 +43,53 @@ int main (int argc, const char * argv[]) {
 	hashTable = createMap(tableSize);	   
 	
     /*... concordance code goes here ...*/
-		
+	fileptr = fopen(filename, "r");
+	char* word;
+	char words[95][16];   // store words here to print later
+	
+  
+	int count = 0;  
+
+	// loop over words in filename adding them to the map
+	while (( word = getWord(fileptr)))
+	  {
+	    //words[count] = malloc(strlen(word));
+	    strcpy(words[count],word);
+	    count++;
+	    
+	    if (containsKey(hashTable, word))
+	      {
+		ValueType *val = atMap(hashTable, word);
+		(*val)++;
+		free(word);
+	      }
+	    else
+	      {
+		insertMap(hashTable, word, 1);
+	      }
+	    
+	  }
+	fclose(fileptr);
+
+	// loop over words
+	printf("word count: %d\n",count);
+	printf("table size: %d\n",hashTable->tableSize);
+
+	for (int i=0; i < count; i++)
+	  {
+	    //int v = val;
+	    word = words[i];
+	    //printf("%d: ",i);
+	    printf("%s: ",word);
+	    printf("%d \n",(*atMap(hashTable,word)));
+	  }
 	/*... concordance code ends here ...*/
 
 	printMap(hashTable);
 	timer = clock() - timer;
 	printf("\nconcordance ran in %f seconds\n", (float)timer / (float)CLOCKS_PER_SEC);
 	printf("Table emptyBuckets = %d\n", emptyBuckets(hashTable));
-    printf("Table count = %d\n", size(hashTable));
+	printf("Table count = %d\n", size(hashTable));
 	printf("Table capacity = %d\n", capacity(hashTable));
 	printf("Table load = %f\n", tableLoad(hashTable));
 	
