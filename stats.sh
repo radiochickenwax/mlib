@@ -7,29 +7,76 @@
 
 
 # "check for the right number and format of arguments"
-# output error message to stderr if incorrect
 
-# start by checking the number of arguments
+if [ $1 = "-rows" ]; then
+    op="rows";
+elif [ $1 = "-cols" ]; then
+    op="cols";
+else
+    printf "Usage: stats.sh {-rows|-cols} [input_file] \n";	    
+    exit;
+fi
+
+# delete this checkpoint
+printf "Summing across $op\n";
+
+# Check if a filename is given by counting number of arguments.
+
 # (browse-url "http://tldp.org/LDP/abs/html/internalvariables.html#ARGLIST")
 
-numargs=$#;
-# echo "number of  arguments:  $numargs";
+if [ $# = 2 ]; then  # a filename is given.  Store it in a variable.
+    filename=$2;
+    printf "You specified $filename as input\n";
 
+    # (browse-url "http://tldp.org/LDP/abs/html/fto.html")
+    if [ -e $2 ]; then     # check that $filename exists 
+	printf "file exists\n";
+	printf "calculating average:\n"
+	
+	# read lines from file into an array
 
+	# (browse-url "http://stackoverflow.com/questions/11393817/bash-read-lines-in-file-into-an-array")
 
-#if [ $numargs -lt 1 ]; then
-#    printf "Usage: stats.sh {-rows|-cols} [input_file] \n";
+	IFS=$'\n' GLOBIGNORE='*';  # what trickery is this?  
+	# read -d '' -r -a lines < $filename;  
 
-#else
-    if [ $1 = "-rows" ]; then
-	# sum rows
-	printf "Summing rows\n";
-    elif [ $1 = "-cols" ]; then
-	printf "Summing cols\n"
-    else
-	printf "Usage: stats.sh {-rows|-cols} [input_file] \n";	    
+	# I prefer to use cat instead of read, it is more general.
+	lines=($(cat $filename));
+
+	# check number of lines
+	numLines=${#lines[@]};  # note the hashtag in lines.  Why?
+	
+	echo "numLines = $numLines";
+
+	# checkpoint:  test that lines are read properly.
+	# for (( i=0; i<$numLines ));  # I wish this syntax worked more easily
+	
+	# for line in $lines  # broken
+
+	# the following works.  It's unnecessary though.
+	#-----------
+	# for line in ${lines[@]}  # no hash tag here eh?  Why?!!
+	#  do
+	#     printf "%s\n" "$line";
+	#     #printf "%s\n" ${lines[$i]};
+	#  done;
+	
+
+	if [ $op = "rows" ]; then
+	    # read 
+	    rowAvg=$(expr 1 + 1);
+	    printf "rowAvg = $rowAvg\n";
+
+	else
+	    printf "no thatnks";
+	fi
+	
+    else # a filename is not given.
+	printf "file not found\n";
     fi
+else
+    printf "No file given\n"
+fi
 
-    # check if a filename is given on the commandline
+
     
-#fi
