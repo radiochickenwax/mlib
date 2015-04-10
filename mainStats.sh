@@ -39,21 +39,11 @@ if [ $1 = "-rows" ]; then
 	    
 	    while [ $i -lt $(expr $numRows + 1 ) ]; do
 		
-		# store ith row of in $line
-		line=$(./getNthRow.sh $filename $i)
-		
-		# get number of words in line 
-		numWords=$(echo $line | wc -w);
-		
-		# sum words
-		lineSum=$(./sum.sh $line);
-		
-		# get decimal average of line
-		lineAvg=$(./div.sh $lineSum $numWords);
+		# extract row from matrix in file
+		line=$(./getNthRow.sh $filename $i);
 
-		# convert average to an integer
-		lineAvg=$(./roundUpOrDown.sh $lineAvg);
-
+		# compute average of row
+		lineAvg=$(./avg.sh $line);
 
 		# store result in array container
 		avgs+=($lineAvg);
