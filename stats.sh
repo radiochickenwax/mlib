@@ -32,9 +32,14 @@ if [ $# = 2 ]; then  # a filename is given.  Store it in a variable.
 
     # (browse-url "http://tldp.org/LDP/abs/html/fto.html")
     if [ -e $2 ]; then     # check that $filename exists 
+	
+	# read file into array since it exists.
+	# dump each line into a temp file and calculate average from that?
+	
+	
 
 	if [ $op = "rows" ]; then
-	    # read 
+
 	    rowAvg=$(expr 1 + 1);
 	    printf "rowAvg = $rowAvg\n";
 
