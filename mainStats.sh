@@ -37,7 +37,7 @@ if [ $1 = "-rows" ]; then
 	    i=1; 	    
 	    declare -a avgs;  # array container to store averages
 	    
-	    while [ $i -lt $numRows ]; do
+	    while [ $i -lt $(expr $numRows + 1 ) ]; do
 		
 		# store ith row of in $line
 		line=$(./getNthRow.sh $filename $i)
@@ -48,9 +48,13 @@ if [ $1 = "-rows" ]; then
 		# sum words
 		lineSum=$(./sum.sh $line);
 		
-		# get average of line
+		# get decimal average of line
 		lineAvg=$(./div.sh $lineSum $numWords);
-		
+
+		# convert average to an integer
+		lineAvg=$(./roundUpOrDown.sh $lineAvg);
+
+
 		# store result in array container
 		avgs+=($lineAvg);
 		
