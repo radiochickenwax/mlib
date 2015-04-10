@@ -5,6 +5,11 @@
 # {-rows|-cols} is mandatory
 # [input_file] is optional.  If left out, stats will use stdin
 
+# ------------------------------
+# This approach uses temp files 
+# instead of arrays or functions
+# ------------------------------
+
 
 # "check for the right number and format of arguments"
 
@@ -16,9 +21,6 @@ else
     printf "Usage: stats.sh {-rows|-cols} [input_file] \n";	    
     exit;
 fi
-
-# delete this checkpoint
-printf "Summing across $op\n";
 
 # Check if a filename is given by counting number of arguments.
 
