@@ -35,7 +35,9 @@ if [ $1 = "-rows" ]; then
 	    # loop over rows, storing ith row in $row
 	    numRows=$(cat $filename | wc -l);
 	    i=1; 	    
+
 	    declare -a avgs;  # array container to store averages
+	    declare -a meds;  # array container to store medians
 	    
 	    while [ $i -lt $(expr $numRows + 1 ) ]; do
 		
@@ -48,6 +50,12 @@ if [ $1 = "-rows" ]; then
 		# store result in array container
 		avgs+=($lineAvg);
 		
+		# get median of line
+		lineMedian=$(./medians.sh $line);
+
+		# store result in array container
+		meds+=($lineMedian);
+
 		# increment i
 		i=$( expr $i + 1 );
 		
@@ -69,12 +77,12 @@ fi
 avgArrLength=${#avgs[@]};
 # echo "array length: "  $avgArrLength; 
 
-printf "Averages\n";
-echo "--------";
+printf "Averages\tMedians\n";
+#printf "--------\t--------";
 
 i=0;
 while [ $i -lt $avgArrLength ]; do
-    echo ${avgs[$i]};
+    printf "${avgs[$i]}\t\t${meds[$i]}\n";
     i=$(expr $i + 1 );
 done
 
