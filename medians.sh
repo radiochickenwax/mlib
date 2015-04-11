@@ -37,7 +37,8 @@ function median()
     numWords=$(echo $line | wc -w);
 
     # sort the sequence
-    sortedLine=$(echo $line | tr " " "\n" | sort | tr "\n" " " );
+    # sortedLine=$(echo $line | tr " " "\n" | sort | tr "\n" " " );
+    sortedLine=$(./sort.sh $line);
 
     # if numWords is odd, get middle value
     # otherwise get largest value of two middle values
@@ -55,9 +56,8 @@ function median()
 	mid=$(expr $mid + 1);
 	
 	# store mid'th element of $line sequence in $median
-	median="${!mid}";
-
-	echo $median;
+	# median="${!mid}"; # this uses $* as input, but we want the sorted input
+	# median=${#sortedLine[$mid]};
 	
     else
     	# sequence is odd
@@ -65,11 +65,15 @@ function median()
 	mid=$(./roundUpOrDown.sh $(./div.sh $numWords 2));
 
 	# store mid'th element of $line sequence in $median
-	median="${!mid}";
-
-	echo $median;
+	# median="${!mid}";
+	# median=${sortedLine[$mid]};
 
     fi
+    
+    median=$(echo $sortedLine | cut -d " " -f $mid);
+
+    echo $median;
+
 }
 
 echo $(median $*)
