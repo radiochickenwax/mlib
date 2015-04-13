@@ -18,72 +18,163 @@
 # "check for the right number and format of arguments"
 #-----------------------------------------------------
 
-if [ $1 = "-rows" ]; then
-    op="rows";
-    # echo "Averaging rows";
 
-    # Check if a filename is given by counting number of arguments.
-    # (browse-url "http://tldp.org/LDP/abs/html/internalvariables.html#ARGLIST")
+# Check if a filename is given by counting number of arguments.
+# (browse-url "http://tldp.org/LDP/abs/html/internalvariables.html#ARGLIST")
+
+if [ $# = 2 ]; then  # a filename is given.  Store it in a variable.
+    filename=$2;
+    # printf "You specified $filename as input\n";
     
-    if [ $# = 2 ]; then  # a filename is given.  Store it in a variable.
-	filename=$2;
-	# printf "You specified $filename as input\n";
+    # check if file exists
+    if [ -e $filename ]; then  # file exists
+	fileExists="true";# file exists so move on
+    else 
+	printf "file '%s' not found\n" $filename;
+	exit 1;
 	
-	# check if file exists
-	if [ -e $filename ]; then  # file exists
-	    
-	    # loop over rows, storing ith row in $row
-	    numRows=$(cat $filename | wc -l);
-	    i=1; 	    
-
-	    declare -a avgs;  # array container to store averages
-	    declare -a meds;  # array container to store medians
-	    
-	    while [ $i -lt $(expr $numRows + 1 ) ]; do
-		
-		# extract row from matrix in file
-		line=$(./getNthRow.sh $filename $i);
-
-		# compute average of row
-		lineAvg=$(./avg.sh $line);
-
-		# store result in array container
-		avgs+=($lineAvg);
-		
-		# get median of line
-		lineMedian=$(./medians.sh $line);
-
-		# store result in array container
-		meds+=($lineMedian);
-
-		# increment i
-		i=$( expr $i + 1 );
-		
-	    done
-	    
-	else printf "file '%s' not found\n" $filename;
-	fi
     fi
-
-elif [ $1 = "-cols" ]; then
-    op="cols";
 else
-    printf "Usage: stats.sh {-rows|-cols} [input_file] \n";	    
-    exit;
+    filename="$*";
 fi
 
 
-# display averages if they exist
-avgArrLength=${#avgs[@]};
-# echo "array length: "  $avgArrLength; 
+declare -a avgs;  # array container to store averages
+declare -a meds;  # array container to store medians
 
-printf "Averages\tMedians\n";
-#printf "--------\t--------";
 
-i=0;
-while [ $i -lt $avgArrLength ]; do
-    printf "${avgs[$i]}\t\t${meds[$i]}\n";
-    i=$(expr $i + 1 );
-done
+function getMedianAndAverageFromLine
+{
+    line=$1;
 
-exit 1;
+    # compute average of row
+    lineAvg=$(./avg.sh $line);
+    
+    # store result in array container
+    avgs+=($lineAvg);
+    
+    # get median of line
+    lineMedian=$(./medians.sh $line);
+    
+    # store result in array container
+    meds+=($lineMedian);
+}
+
+function displayRowResults
+{
+    # display averages if they exist
+    avgArrLength=${#avgs[@]};
+    # echo "array length: "  $avgArrLength; 
+    
+    printf "Averages\tMedians\n";
+    #printf "--------\t--------";
+    
+    i=0;
+    while [ $i -lt $avgArrLength ]; do
+	printf "${avgs[$i]}\t\t${meds[$i]}\n";
+	i=$(expr $i + 1 );
+    done
+}
+
+
+function displayColResults
+{
+    avgArrLength=${#avgs[@]};
+
+    # print averages    
+    printf "Averages:\n";
+    #printf "--------\t--------";
+    
+    i=0;
+    while [ $i -lt $avgArrLength ]; do
+	printf "${avgs[$i]}\t";
+	i=$(expr $i + 1 );
+    done
+    printf "\n";
+
+    # print medians
+    printf "Medians:\n";
+    i=0;
+    while [ $i -lt $avgArrLength ]; do
+	printf "${meds[$i]}\t";
+	i=$(expr $i + 1 );
+    done
+    printf "\n";
+
+}
+
+
+
+
+if [ $(echo $1 | cut -c -2 ) = "-r" ]; then
+    op="rows";
+    # echo "Averaging rows";
+    
+    # loop over rows, storing ith row in $row
+    max=$(cat $filename | wc -l);
+    i=1; 	    
+    
+    while [ $i -le $max ]; do
+	
+	# extract row from matrix in file
+	line=$(./getNthRow.sh $filename $i);
+	
+	# $(getMedianAndAverageFromLine $line)
+
+	# compute average of row
+	lineAvg=$(./avg.sh $line);
+	
+	# store result in array container
+	avgs+=($lineAvg);
+	
+	# get median of line
+	lineMedian=$(./medians.sh $line);
+	
+	# store result in array container
+	meds+=($lineMedian);
+		
+	# increment i
+	i=$( expr $i + 1 );
+	
+    done
+    
+    displayRowResults;
+
+elif [ $(echo $1 | cut -c -2 ) = "-c" ]; then
+    op="cols";
+
+    max=$(./getNthCol.sh $filename 1 | wc -w);
+    i=1;
+
+    while [ $i -le $max ]; do
+
+	# get column from input, convert to a line of words
+	line=$(echo $(./getNthCol.sh $filename $i));
+	
+	# $(getMedianAndAverageFromLine $line)
+
+	# compute average of col
+	lineAvg=$(./avg.sh $line);
+	
+	# store result in array container
+	avgs+=($lineAvg);
+	
+	# get median of line
+	lineMedian=$(./medians.sh $line);
+	
+	# store result in array container
+	meds+=($lineMedian);
+	
+	# increment i
+	i=$( expr $i + 1 );
+
+    done
+    
+    displayColResults;
+	
+else
+    printf "Usage: stats.sh {-rows|-cols} [input_file] \n";	    
+    exit 1;
+fi
+
+
