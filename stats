@@ -1,0 +1,436 @@
+#!/bin/bash
+
+# calculate averages and medians from an input file of numbers
+
+# stats {-rows|-cols} [input_file]
+# {-rows|-cols} is mandatory
+# [input_file] is optional.  If left out, stats will use stdin
+
+
+# -------------------------------------------------------------
+# this version broke everything into separate files.
+# getNthRow.sh, getNthCol.sh, sum.sh, div.sh
+# on the next iteration, I will merge these into a single file.
+# -------------------------------------------------------------
+
+
+#-----------------------------------------------------
+# "check for the right number and format of arguments"
+#-----------------------------------------------------
+
+
+# Check if a filename is given by counting number of arguments.
+# (browse-url "http://tldp.org/LDP/abs/html/internalvariables.html#ARGLIST")
+
+if [ $# = 2 ]; then  # a filename is given.  Store it in a variable.
+    filename=$2;
+    # printf "You specified $filename as input\n";
+    
+    # check if file exists
+    if [ -e $filename ]; then  # file exists
+	fileExists="true";# file exists so move on
+    else 
+	printf "file '%s' not found\n" $filename;
+	exit 1;
+	
+    fi
+else
+    filename="$*";
+fi
+
+
+declare -a avgs;  # array container to store averages
+declare -a meds;  # array container to store medians
+
+
+
+# this file produces an integer sum of all input arguments if they are integers.
+# a floating point sum would be more general, but it doesn't pass spec for this assignment
+
+
+sum ()  # sum all input arguments
+{
+    length=$#;   # number of input arguments
+    i=1;         # position in array of arguments                     
+    sum=0;       # start sum with zero
+
+    # NOTE:
+    # i starts at 1 not 0.  The zeroth argument is the name of the file.
+    
+
+    while [ $i -lt $(expr $length + 1) ]; do
+	# http://stackoverflow.com/questions/1497811/how-to-get-the-nth-positional-argument-in-bash
+	# this uses bash indirection.  (http://tldp.org/LDP/abs/html/ivr.html)
+    	nthArg="${!i}";                 
+	
+	# Create a regexp that searches for numbers only
+	# http://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
+    	numRegExp='^[0-9]+$';         
+
+	# if nthArg is numeric, then add it to sum.  
+	# Otherwise output error msg and exit.
+
+    	if [[ $nthArg =~ $numRegExp ]]; then  
+    	    sum=$(expr $sum + $nthArg);
+    	    i=$(expr $i + 1);	    
+    	else
+    	    echo "non-numeric input.";
+    	    exit 1;
+    	fi
+
+    done
+
+    # echo in a function is the equivalent of a return statement.
+    echo $sum;
+}
+
+
+
+# ------------------------------------
+# floating point division in bash
+#
+# taken mostly from
+# http://stackoverflow.com/questions/12147040/division-in-script-and-floating-point/24431665#24431665
+#
+# see also 
+# http://en.wikipedia.org/wiki/Division_algorithm
+#----------------------------------------
+function div () # $1 = numerator,   $2 = denominator
+{
+    if [ $2 -eq 0 ]; then echo  "divideByZero"; exit; fi
+    local p=12                            # precision
+    local c=${c:-0}                       # precision counter.  Wat?  
+                                          # what is ${c:-0} ?
+					  # lookup "index slicing" 
+
+    local d=.                             # decimal separator
+    local r=$(($1/$2));                   # result of division
+
+    echo -n $r                            # display result without newline
+
+    # things get stranger here.
+    local m=$(($r*$2))                           # what?
+    [ $c -eq 0 ] && [ $m -ne $1 ] && echo -n $d  # echo decimal point if...
+    [ $1 -eq $m ] || [ $c -eq $p ] && return     # return if..
+    local e=$(($1-$m))               # subtract decimal portion
+    let c=c+1                        # increment
+    div $(($e*10)) $2                # recurse
+}
+
+function divp
+{
+    echo $(python -c "print $1.0/$2");
+}
+
+# outline of strategy:
+# mantissa = string up until period.  
+#   example:  for 5.34,  mantissa = 5
+
+# decimal = first character after period.
+# if it's >= 5, round mantissa up, otherwise leave mantissa alone.
+
+function roundUpOrDown ()  
+{
+    # expected input:  1 string possibly containing decimals
+    
+    # check if string contains period
+    if [[ $1 == *"."* ]]; then
+	# string contains period.
+
+	# get mantissa 
+	mantissa=$(echo $1 | cut -d "." -f 1);
+
+	# get decimal
+	decimal=$(echo $1 | cut -d "." -f 2 | cut -c 1);
+	# the first cut gets everything after the period,
+	# the 2nd removes everything after the first character
+
+	# round mantissa up if the decimal part is greater than 5,
+	# otherwise just return it.
+
+	if [ $decimal -ge 5 ]; then
+	    echo $(expr $mantissa + 1);
+	    exit 1;
+	else
+	    echo $(expr $mantissa);
+	    exit 1;
+	fi
+	
+	
+    else
+	# string is already an integer, return it.
+	echo $1;
+	exit 1;
+    fi
+}
+
+
+
+function getNthRow
+{
+    echo $(cat $1 | head -$2 | tail -1);
+}
+
+
+# output the nth ($2) column of a file ($1) containing a matrix of numbers
+# alternatively, use awk '{print $2}'.  I think 'cut' is much cleaner.
+
+function getNthCol
+{
+    cat $1 | cut -f$2
+}
+
+
+# calculate the average of a series
+# where the series is all on one line, separated by spaces
+
+function avg ()
+{
+    # "line" is all of the input parameters in a single string
+    line="$*";
+
+    # get number of words in line 
+    numWords=$(echo $line | wc -w);
+    
+    # sum words
+    lineSum=$(sum $line);
+    
+    # get decimal average of line
+    lineAvg=$(div $lineSum $numWords);
+    
+    # convert average to an integer
+    lineAvg=$(roundUpOrDown $lineAvg);
+
+    echo $lineAvg;
+    exit 0;
+}
+
+
+
+function sortLine ()
+{
+    # line="$*";
+    line=$1;
+    sortedLine=$(echo $line | tr " " "\n" | sort -g | tr "\n" " " );
+    echo $sortedLine;
+}
+
+
+
+
+# this median is defined as the middle value of a sorted sequence
+# when there is an odd number of elements.
+
+# when there is an even number of elements, it is the larger of the
+# two middle values 
+
+# the sequence is defined on one line, separated by spaces
+
+# echo the max of two numbers
+# http://stackoverflow.com/questions/18668556/comparing-numbers-in-bash
+function max()
+{ 
+    # expected input: two integers
+    
+    # check that there are two numbers given
+    if [ $# = 2 ]; then
+	echo $(( $1 > $2 ? $1 : $2 ));	
+	exit 1;
+    else
+	echo "max(): wrong number of arguments";
+	exit 1;
+    fi
+    
+
+
+}
+
+
+function median()
+{
+    # line is all of the input parameters as a single string
+    line="$*";
+
+    # get number of words in line
+    numWords=$(echo $line | wc -w);
+
+    # sort the sequence
+    sortedLine=$(echo $line | tr " " "\n" | sort | tr "\n" " " );
+    # sortedLine=$(sort $line);
+
+    # if numWords is odd, get middle value
+    # otherwise get largest value of two middle values
+
+    # NOTE:  don't need to check if it's even or odd,
+    # median will always be the the (length/2)th element
+    # by this definition.
+
+
+
+    if [ $(expr $numWords % 2) -eq 0 ]; then
+    	# sequence is even
+
+	# mid=$(./roundUpOrDown.sh $(./div.sh $numWords 2));
+	mid=$(roundUpOrDown $(div $numWords 2));
+	mid=$(expr $mid + 1);
+	
+	# store mid'th element of $line sequence in $median
+	# median="${!mid}"; # this uses $* as input, but we want the sorted input
+	# median=${#sortedLine[$mid]};
+	
+    else
+    	# sequence is odd
+	
+	mid=$(roundUpOrDown $(div $numWords 2));
+	# mid=$(./roundUpOrDown.sh $(./div.sh $numWords 2));
+
+	# store mid'th element of $line sequence in $median
+	# median="${!mid}";
+	# median=${sortedLine[$mid]};
+
+    fi
+    
+    median=$(echo $sortedLine | cut -d " " -f $mid);
+
+    echo $median;
+
+}
+
+function getMedianAndAverageFromLine
+{
+    line=$1;
+
+    # compute average of row
+    # lineAvg=$(./avg.sh $line);
+    lineAvg=$(avg $line)
+    
+
+    # store result in array container
+    avgs+=($lineAvg);
+    
+    # get median of line
+    # lineMedian=$(./medians.sh $line);
+    lineMedian=$(median $line);
+    
+    # store result in array container
+    meds+=($lineMedian);
+}
+
+function displayRowResults
+{
+    # display averages if they exist
+    avgArrLength=${#avgs[@]};
+    # echo "array length: "  $avgArrLength; 
+    
+    printf "Averages\tMedians\n";
+    #printf "--------\t--------";
+    
+    i=0;
+    while [ $i -lt $avgArrLength ]; do
+	printf "${avgs[$i]}\t\t${meds[$i]}\n";
+	i=$(expr $i + 1 );
+    done
+}
+
+
+function displayColResults
+{
+    avgArrLength=${#avgs[@]};
+
+    # print averages    
+    printf "Averages:\n";
+    #printf "--------\t--------";
+    
+    i=0;
+    while [ $i -lt $avgArrLength ]; do
+	printf "${avgs[$i]}\t";
+	i=$(expr $i + 1 );
+    done
+    printf "\n";
+
+    # print medians
+    printf "Medians:\n";
+    i=0;
+    while [ $i -lt $avgArrLength ]; do
+	printf "${meds[$i]}\t";
+	i=$(expr $i + 1 );
+    done
+    printf "\n";
+
+}
+
+
+
+
+if [ $(echo $1 | cut -c -2 ) = "-r" ]; then
+    op="rows";
+    # echo "Averaging rows";
+    
+    # loop over rows, storing ith row in $row
+    max=$(cat $filename | wc -l);
+    i=1; 	    
+    
+    while [ $i -le $max ]; do
+	
+	# extract row from matrix in file
+	line=$(getNthRow $filename $i);
+	
+	# $(getMedianAndAverageFromLine $line)
+
+	# compute average of row
+	lineAvg=$(avg $line);
+	
+	# store result in array container
+	avgs+=($lineAvg);
+	
+	# get median of line
+	lineMedian=$(median $line);
+	
+	# store result in array container
+	meds+=($lineMedian);
+		
+	# increment i
+	i=$( expr $i + 1 );
+	
+    done
+    
+    displayRowResults;
+
+elif [ $(echo $1 | cut -c -2 ) = "-c" ]; then
+    op="cols";
+
+    max=$(getNthCol $filename 1 | wc -w);
+    i=1;
+
+    while [ $i -le $max ]; do
+
+	# get column from input, convert to a line of words
+	line=$(echo $(getNthCol $filename $i));
+	
+	# $(getMedianAndAverageFromLine $line)
+
+	# compute average of col
+	lineAvg=$(avg $line);
+	
+	# store result in array container
+	avgs+=($lineAvg);
+	
+	# get median of line
+	lineMedian=$(median $line);
+	
+	# store result in array container
+	meds+=($lineMedian);
+	
+	# increment i
+	i=$( expr $i + 1 );
+
+    done
+    
+    displayColResults;
+	
+else
+    printf "Usage: stats {-rows|-cols} [input_file] \n";	    
+    exit 1;
+fi
+
+
