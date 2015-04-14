@@ -450,16 +450,6 @@ function checkInputs
 {
     if [ $# = 2 ]; then  # a filename is given.  Store it in a variable.
 	filename=$2;
-	# printf "You specified $filename as input\n";
-	
-	# check if file exists
-	if [ -e $filename ]; then  # file exists
-	    fileExists="true";# file exists so move on
-	else 
-	    printf "file '%s' not found\n" $filename;
-	    exit 1;
-	    
-	fi
     else
 	if [ $# = 1 ]; then
 	    # check that "-r" or "-c" are passed as options,
@@ -467,12 +457,7 @@ function checkInputs
 	    opt1=$(echo $1 | cut -c -2 );
 	    if  [ $opt1 = "-r" ] || [ $opt1 = "-c" ]; then
 		# get input from stdin
-		# filename="$@";
-		# filename=$(catecho "$*");
-		# filename=$&
-		
 		filename="/dev/stdin";
-		
 	    else
 
 		# print usage message to stderr, exit with value 1
@@ -498,7 +483,15 @@ function checkInputs
 function main
 {
     filename=$(checkInputs $*);
-    calculateValues $*;
+    # check if file exists
+    if [ -e $filename ]; then  # file exists
+	fileExists="true";# file exists so move on
+	calculateValues $*;
+    else 
+	printf "file '%s' not found\n" $filename;
+	exit 1;
+    fi
+    
     # echo $filename;
     
     # testing median function
