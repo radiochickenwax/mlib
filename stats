@@ -7,44 +7,23 @@
 # [input_file] is optional.  If left out, stats will use stdin
 
 
+
 # -------------------------------------------------------------
-# this version broke everything into separate files.
+# earlier versions broke everything into separate files.
 # getNthRow.sh, getNthCol.sh, sum.sh, div.sh
-# on the next iteration, I will merge these into a single file.
+# now merged these into this single file.
 # -------------------------------------------------------------
 
 
-#-----------------------------------------------------
-# "check for the right number and format of arguments"
-#-----------------------------------------------------
 
-
-# Check if a filename is given by counting number of arguments.
-# (browse-url "http://tldp.org/LDP/abs/html/internalvariables.html#ARGLIST")
-
-if [ $# = 2 ]; then  # a filename is given.  Store it in a variable.
-    filename=$2;
-    # printf "You specified $filename as input\n";
-    
-    # check if file exists
-    if [ -e $filename ]; then  # file exists
-	fileExists="true";# file exists so move on
-    else 
-	printf "file '%s' not found\n" $filename;
-	exit 1;
-	
-    fi
-else
-    filename="$*";
-fi
-
+# global array variables
 
 declare -a avgs;  # array container to store averages
 declare -a meds;  # array container to store medians
 
 
 
-# this file produces an integer sum of all input arguments if they are integers.
+# this function produces an integer sum of all input arguments if they are integers.
 # a floating point sum would be more general, but it doesn't pass spec for this assignment
 
 
@@ -97,7 +76,7 @@ sum ()  # sum all input arguments
 #----------------------------------------
 function div () # $1 = numerator,   $2 = denominator
 {
-    if [ $2 -eq 0 ]; then echo  "divideByZero"; exit; fi
+    if [ $2 -eq 0 ]; then exit 1; fi
     local p=12                            # precision
     local c=${c:-0}                       # precision counter.  Wat?  
                                           # what is ${c:-0} ?
@@ -117,10 +96,15 @@ function div () # $1 = numerator,   $2 = denominator
     div $(($e*10)) $2                # recurse
 }
 
+# divp is used only for error checking.  
+
 function divp
 {
     echo $(python -c "print $1.0/$2");
 }
+
+
+# roundUpOrDown:
 
 # outline of strategy:
 # mantissa = string up until period.  
@@ -150,17 +134,17 @@ function roundUpOrDown ()
 
 	if [ $decimal -ge 5 ]; then
 	    echo $(expr $mantissa + 1);
-	    exit 1;
+	    exit 0;
 	else
 	    echo $(expr $mantissa);
-	    exit 1;
+	    exit 0;
 	fi
 	
 	
     else
 	# string is already an integer, return it.
 	echo $1;
-	exit 1;
+	exit 0;
     fi
 }
 
@@ -235,7 +219,7 @@ function max()
     # check that there are two numbers given
     if [ $# = 2 ]; then
 	echo $(( $1 > $2 ? $1 : $2 ));	
-	exit 1;
+	exit 0;
     else
 	echo "max(): wrong number of arguments";
 	exit 1;
@@ -249,13 +233,13 @@ function max()
 function median()
 {
     # line is all of the input parameters as a single string
-    line="$*";
+    line="$*"
 
     # get number of words in line
     numWords=$(echo $line | wc -w);
 
     # sort the sequence
-    sortedLine=$(echo $line | tr " " "\n" | sort | tr "\n" " " );
+    sortedLine=$(echo $line | tr " " "\n" | sort -g | tr "\n" " " );
     # sortedLine=$(sort $line);
 
     # if numWords is odd, get middle value
@@ -263,10 +247,10 @@ function median()
 
     # NOTE:  don't need to check if it's even or odd,
     # median will always be the the (length/2)th element
-    # by this definition.
+    # by this definition?
 
 
-
+    # store the middle value in $mid
     if [ $(expr $numWords % 2) -eq 0 ]; then
     	# sequence is even
 
@@ -290,6 +274,7 @@ function median()
 
     fi
     
+    # get the middle element of the sorted line
     median=$(echo $sortedLine | cut -d " " -f $mid);
 
     echo $median;
@@ -361,9 +346,9 @@ function displayColResults
 
 
 
-
-if [ $(echo $1 | cut -c -2 ) = "-r" ]; then
-    op="rows";
+function calculateRows
+{
+    # op="rows";
     # echo "Averaging rows";
     
     # loop over rows, storing ith row in $row
@@ -376,7 +361,7 @@ if [ $(echo $1 | cut -c -2 ) = "-r" ]; then
 	line=$(getNthRow $filename $i);
 	
 	# $(getMedianAndAverageFromLine $line)
-
+	
 	# compute average of row
 	lineAvg=$(avg $line);
 	
@@ -388,27 +373,31 @@ if [ $(echo $1 | cut -c -2 ) = "-r" ]; then
 	
 	# store result in array container
 	meds+=($lineMedian);
-		
+	
 	# increment i
 	i=$( expr $i + 1 );
 	
     done
     
     displayRowResults;
+    
+}
 
-elif [ $(echo $1 | cut -c -2 ) = "-c" ]; then
-    op="cols";
 
+function calculateCols
+{
+	# op="cols";
+    
     max=$(getNthCol $filename 1 | wc -w);
     i=1;
-
+    
     while [ $i -le $max ]; do
-
+	
 	# get column from input, convert to a line of words
 	line=$(echo $(getNthCol $filename $i));
 	
 	# $(getMedianAndAverageFromLine $line)
-
+	
 	# compute average of col
 	lineAvg=$(avg $line);
 	
@@ -423,14 +412,97 @@ elif [ $(echo $1 | cut -c -2 ) = "-c" ]; then
 	
 	# increment i
 	i=$( expr $i + 1 );
-
+	
     done
     
     displayColResults;
+    
+}
+
+
+
+function calculateValues
+{
+    if [ $(echo $1 | cut -c -2 ) = "-r" ]; then
+	calculateRows;
+    elif [ $(echo $1 | cut -c -2 ) = "-c" ]; then
+	calculateCols;
+    else
+	echo "Usage: stats {-rows|-cols} [input_file]" 1>&2;
+	exit 1;
+    fi
+}
+
+
+
+# http://stackoverflow.com/questions/18761209/how-to-make-a-bash-function-which-can-read-from-standard-input
+
+function catecho ()
+{    
+    if read -t 0; then
+        echo $2
+    else
+        echo "$*"
+    fi
+}
+
+
+
+#-----------------------------------------------------
+# "check for the right number and format of arguments"
+#-----------------------------------------------------
+
+
+# Check if a filename is given by counting number of arguments.
+# (browse-url "http://tldp.org/LDP/abs/html/internalvariables.html#ARGLIST")
+
+function checkInputs
+{
+    if [ $# = 2 ]; then  # a filename is given.  Store it in a variable.
+	filename=$2;
+	# printf "You specified $filename as input\n";
 	
-else
-    printf "Usage: stats {-rows|-cols} [input_file] \n";	    
-    exit 1;
-fi
+	# check if file exists
+	if [ -e $filename ]; then  # file exists
+	    fileExists="true";# file exists so move on
+	else 
+	    printf "file '%s' not found\n" $filename;
+	    exit 1;
+	    
+	fi
+    else
+	# get input from stdin
+	# filename="$@";
+	# filename=$(catecho "$*");
+	filename=$&
+    fi
+
+    # return filename
+    echo $filename;
+}
 
 
+
+# main driver function
+function main
+{
+    filename=$(checkInputs $*);
+    calculateValues $*;
+    # echo $filename;
+    
+    # testing median function
+    # check if sequence is even or odd
+    
+    # number of params
+    #line=$(getNthRow $filename 3);
+    #printf "unsortedLine:\n $line\n";
+    #sortedLine=$(echo $line | tr " " "\n" | sort -g | tr "\n" " " );
+    #printf "sortedLine:\n $sortedLine\n";
+    # numWords=$(echo $line | wc -w);
+    # echo $numWords;
+    #echo $(median $line )
+}
+
+# call main function
+# echo $(main $*);
+main $*;
