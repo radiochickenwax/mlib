@@ -221,10 +221,10 @@ void printCirListDeque(struct cirListDeque *q)
 	lnk = q->last->next;
 	do
 	{
-		printf("%f\n", lnk->value);
+		printf("%c,", lnk->value->label);
 		lnk = lnk->next;
 	}
 	while(!EQ(lnk, q->last->next));
 	
-	printf("+++++++++++\n");
+	/*printf("+++++++++++\n");*/
 }

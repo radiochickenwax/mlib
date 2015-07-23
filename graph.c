@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <assert.h>
 
 #include "cirListDeque.h"
+
 
 void createGraph1(Graph* g)
 {
@@ -196,21 +198,21 @@ void clearVisited(Graph* g)
  */
 int DFSRecursiveHelper(Graph* g, Vertex* currVert, Vertex* destination)
 {
-	int i;
-	
-	currVert->isVisited = 1;
-	if(currVert == destination)
-		return 1;
-	for(i = 0; i < currVert->numNeighbors; ++i)
-		if(!currVert->neighbors[i]->isVisited)
-			if(DFSRecursiveHelper(g, currVert->neighbors[i], destination))
-				return 1;
-	return 0;
+  int i;
+  
+  currVert->isVisited = 1;
+  if(currVert == destination)
+    return 1;
+  for(i = 0; i < currVert->numNeighbors; ++i)
+    if(!currVert->neighbors[i]->isVisited)
+      if(DFSRecursiveHelper(g, currVert->neighbors[i], destination))
+	return 1;
+  return 0;
 }
 int DFSRecursive(Graph* g, Vertex* source, Vertex* destination)
 {
-	clearVisited(g);
-	return DFSRecursiveHelper(g, source, destination);
+  clearVisited(g);
+  return DFSRecursiveHelper(g, source, destination);
 }
 
 /* This function should return a boolean (encoded as an int) indicating
@@ -222,8 +224,82 @@ int DFSRecursive(Graph* g, Vertex* source, Vertex* destination)
  */
 int DFS(Graph* g, Vertex* source, Vertex* destination)
 {
-	/* FIXME you will write this */
-	return 0;
+  /* FIXME you will write this */
+  /* DFSRecursive (g, source, destination) */   
+
+  assert( g != NULL );
+  assert( source != NULL );
+  assert( destination != NULL );
+
+  clearVisited(g);
+  
+  /* printf("Searching for %c from %c\n",destination->label,source->label); */
+
+  cirListDeque stack;  /* a stack can be a special instance of deque */
+  /* can't use a pointer for 'stack' because there's nothing for it to point at */
+
+  Vertex* current;
+
+  int i;  /* C99 isn't included on this assignment for some reason  */
+ 
+  initCirListDeque(&stack); 
+  
+  addBackCirListDeque(&stack,source);   /* push vertex source to top of stack */
+  /* printf("pushed %c\n",source->label); */
+
+  while( !isEmptyCirListDeque(&stack) )  /* loop until &stack is empty */
+    {
+      /* printf("(SOL) current stack: "); */
+      /* printCirListDeque(&stack);  */
+      /* printf("\n"); */
+
+      current = backCirListDeque(&stack);  /* pop vertex from &stack */
+      removeBackCirListDeque(&stack);
+      
+      /* printf("removed %c\n", current->label); */
+      /* printf("current->label = %c\n",current->label); */
+
+      if ( current->label == destination->label )
+	{
+	  /* printf("found %c\n",destination->label); */
+	  return 1;
+	}
+      
+      else
+	{
+	  if ( current->isVisited == 0 )  /* mark as visited if not already */
+	    {
+	      current->isVisited = 1;
+	      /* printf("marked %c as visited\n",current->label); */
+	    }
+	  else
+	    {
+	      /* printf("Skipping %c because it visited already.\n",current->label); */
+	    }
+	  /* printf("checking %d neighbors\n",current->numNeighbors);	   */
+	  for  (  i = 0; i < current->numNeighbors; i++ )  /* push neighbors if necessary */
+	    {
+	      if ( current->label == destination->label )
+		{
+		  /* printf("found %c\n",destination->label); */
+		  return 1;
+		}
+	      else
+		{
+		  if ( current->neighbors[i]->isVisited == 0 )
+		    {
+		      addBackCirListDeque( &stack,current->neighbors[i] );
+		      /* printf("pushed %c\n",current->neighbors[i]->label); */
+		    }
+		  /* else  */
+		    /* printf("Skipping %c because it visited already.\n",current->neighbors[i]->label); */
+		}
+	    }
+	}
+
+    }
+
+  return 0;
 }
 
 /* This function should return a boolean (encoded as an int) indicating
@@ -235,6 +311,38 @@ int DFS(Graph* g, Vertex* source, Vertex* destination)
  */
 int BFS(Graph* g, Vertex* source, Vertex* destination)
 {
-	/* FIXME you will write this */
-	return 0;
+  /* FIXME you will write this */
+  clearVisited(g);
+  
+  cirListDeque queue;
+  Vertex *currentVertex;
+  int i;
+  
+  initCirListDeque(&queue);
+  addBackCirListDeque(&queue, source);
+  
+  while(!isEmptyCirListDeque(&queue))
+    {
+      currentVertex = frontCirListDeque(&queue);
+      removeFrontCirListDeque(&queue);
+      
+      if(currentVertex->label == destination->label)
+	return 1;
+      else
+        {
+	  if(currentVertex->isVisited == 0)
+	    currentVertex->isVisited = 1;
+	  for (i = 0; i < currentVertex->numNeighbors; i++)
+            {
+	      if(currentVertex->label == destination->label)
+		return 1;
+	      else
+                {
+		  if(currentVertex->neighbors[i]->isVisited == 0)
+		    addBackCirListDeque(&queue, currentVertex->neighbors[i]);
+                }
+            }
+        }
+    }
+  return 0;
 }
