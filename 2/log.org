@@ -1,0 +1,8 @@
+** log for folder 2
+*** Sat Aug 29, 2015 14:17:19 having a folder named 2 is stupid.
+
+    What I need to do here is use what's here to make something useful.  
+
+    There are 2 useful things here.  A calculator is useful, but it's
+    not as useful as the dynamic array which could be made into a
+    library that can be built on.   
