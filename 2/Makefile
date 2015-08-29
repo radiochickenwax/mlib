@@ -1,4 +1,4 @@
-all: calc testda
+all: calc testda lib-shared lib-static
 
 calc: dynamicArray.o calc.o
 	gcc -g -Wall -std=c99 -o calc dynamicArray.o calc.o -lm
@@ -12,8 +12,9 @@ calc.o: calc.c dynamicArray.h
 testDynArray.o: testDynArray.c dynamicArray.h
 	gcc -g -Wall -std=c99 -c testDynArray.c
 
-#lib-shared: dynamicArray.o
-#	
+lib-shared: dynamicArray.o
+	#gcc -c -fPIC dynamicArray.c -o dynamicArray.o
+	gcc -shared -Wl,-soname,libDynArr.so -o libDynArr.so dynamicArray.o
 
 lib-static: dynamicArray.o
 	ar rcs libDynArr.a dynamicArray.o 
@@ -25,6 +26,7 @@ dynamicArray.o: dynamicArray.c dynamicArray.h
 clean:
 	rm dynamicArray.o
 	rm calc.o
+	rm libDynArr.a
 	rm testDynArray.o
 	rm calc
 	rm testda
