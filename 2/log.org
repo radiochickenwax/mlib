@@ -17,8 +17,12 @@
 
     http://www.adp-gmbh.ch/cpp/gcc/create_lib.html
     
-    
+    Static libs are created with ar.
 
+    Shared libs are created with 
+    
+    gcc -c -fPIC
+    gcc -shared -Wl, -soname,
 
 *** Sat Aug 29, 2015 14:25:46 benchmarking
 
