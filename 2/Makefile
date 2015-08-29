@@ -12,9 +12,16 @@ calc.o: calc.c dynamicArray.h
 testDynArray.o: testDynArray.c dynamicArray.h
 	gcc -g -Wall -std=c99 -c testDynArray.c
 
+#lib-shared: dynamicArray.o
+#	
+
+lib-static: dynamicArray.o
+	ar rcs libDynArr.a dynamicArray.o 
+
 dynamicArray.o: dynamicArray.c dynamicArray.h 
 	gcc -g -Wall -std=c99 -c dynamicArray.c	
-		
+
+
 clean:
 	rm dynamicArray.o
 	rm calc.o

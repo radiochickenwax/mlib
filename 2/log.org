@@ -5,4 +5,22 @@
 
     There are 2 useful things here.  A calculator is useful, but it's
     not as useful as the dynamic array which could be made into a
-    library that can be built on.   
+    library that can be built on.  
+
+    So what I want to do is build dynamicArray.c into dynamicArray.so
+    with gcc in the makefile.  Then build testDynArray.c and calc.c
+    by linking to the .so file.  
+
+
+    # add instructions and links to building shared / static libraries
+    # with gcc here. 
+
+    http://www.adp-gmbh.ch/cpp/gcc/create_lib.html
+    
+    
+
+
+*** Sat Aug 29, 2015 14:25:46 benchmarking
+
+    Eventually, I'm going to want to benchmark this stuff.  Where do I
+    have benchmarking routines?
