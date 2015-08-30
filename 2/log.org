@@ -28,3 +28,28 @@
 
     Eventually, I'm going to want to benchmark this stuff.  Where do I
     have benchmarking routines?
+
+*** Mon Aug 31, 2015 07:33:14 not getting hung up
+    
+    Don't want to get too hung up on details, because there's a lot of
+    other things to get to here, folder 2 is just the start.
+
+    Still trying to analyze shared and static libraries as well as
+    object code.  What's the big difference?   This is really all
+    about implementation which fascinates me, but the project is more
+    about abstraction than implementation.   So the key is not to get
+    too hung up on implementation details.  
+
+    If I wanted to thoroughly analyze things, then looking at them in
+    hex mode is probably a good way.   I'll come back to that on a
+    different pass, right now I just want to build the static and
+    shared libraries.  
+
+    I wanted to make the next folder build off the library in this
+    folder.  Mostly to get a better grip on larger scale projects
+    using gnu-make.    
+
+    I'm fairly certain that I'm not going to be able to make this code
+    base shippable by tomorrow.  
+
+*** Mon Aug 31, 2015 07:38:38 looking ahead [[file:/n900t/usr/src/mlib/3/]]
