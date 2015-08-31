@@ -1,0 +1,13 @@
+
+** mlib network functions
+
+*** summary
+*** goals
+*** journal
+**** Mon Aug 31, 2015 14:00:38 what to do.
+     There's not really a whole lot here to start with.  
+
+     On another hand, there's really quite a bit.   Let's start with
+     the python server/clients.
+
+     
