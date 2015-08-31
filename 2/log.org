@@ -1,6 +1,26 @@
 ** log for folder 2
 *** summary
 
+    This folder contains some temporary files for the creation of
+    weak vectors in the C programming language.  
+
+    I don't know if this will ever be as useful as a C++ vector, but
+    I'm trying to build up the means to make it so.  
+
+    There are numerous sources to look at for reference:  the first
+    to come to mind are C++ (obviously), python and glib.   Lisp is
+    definitely something I'd like to look at also.   Can I put some
+    web links to source code?
+
+    For longer term use, I want to build this into a library, and
+    then build a reusable library (mlib) from this library.   
+
+    
+
+
+
+*** build methods
+
     Off the top of my head: 
 
     There are 3 ways to build this.  
