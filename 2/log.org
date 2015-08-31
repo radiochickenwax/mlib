@@ -1,4 +1,29 @@
 ** log for folder 2
+*** summary
+
+    Off the top of my head: 
+
+    There are 3 ways to build this.  
+
+    1. Using object code and direct compilation.
+    2. Using static libs and linking
+    3. Using shared libs and dynamic linking
+      
+    All three have pros and cons.   The goal is currently to produce
+    all 3 builds and compare the pros and cons of each method.  
+
+    Here are my immediate thoughts:
+
+    1. direct compilation
+       - easiest to build
+    2. static libs
+       - fastest run time
+       - largest file size
+       - easily portable executables
+    3. shared libs
+       - easy to use with other builds
+
+
 *** Sat Aug 29, 2015 14:17:19 having a folder named 2 is stupid.
 
     What I need to do here is use what's here to make something useful.  
@@ -54,6 +79,33 @@
 
 *** Mon Aug 31, 2015 07:38:38 looking ahead [[file:/n900t/usr/src/mlib/3/]]
 *** Mon Aug 31, 2015 09:01:45 build notes
-    This works on ubuntu, but not on cygwin. 
+**** cygwin doesn't work out of box
+     This works on ubuntu, but not on cygwin. 
 
-    http://stackoverflow.com/questions/16154130/cygwin-g-linker-doesnt-find-shared-library
+     http://stackoverflow.com/questions/16154130/cygwin-g-linker-doesnt-find-shared-library
+
+**** files and sizes
+    total 1.9M
+868K -rwxr-xr-x 1 root root 867K Aug 31 09:16 testda-static
+ 16K -rw-r--r-- 1 root root  15K Aug 31 09:16 dynamicArray.o
+ 16K -rw-r--r-- 1 root root  16K Aug 31 09:16 libDynArr.a
+ 20K -rwxr-xr-x 1 root root  17K Aug 31 09:16 libDynArr.so
+4.0K -rwxr--r-- 1 root root 1.3K Aug 31 09:16 Makefile
+868K -rwxr-xr-x 1 root root 867K Aug 31 09:15 a.out
+ 28K -rwxr-xr-x 1 root root  26K Aug 31 09:15 calc
+ 16K -rwxr-xr-x 1 root root  15K Aug 31 09:15 testda-shared
+ 20K -rw-r--r-- 1 root root  17K Aug 31 09:14 calc.o
+ 12K -rw-r--r-- 1 root root  11K Aug 31 09:14 testDynArray.o
+4.0K -rwxr--r-- 1 root root 2.2K Aug 31 09:09 log.org
+ 16K -rwxr--r-- 1 root root  15K Aug 31 08:58 2015-08-31-log.org
+4.0K -rwxr--r-- 1 root root  549 Aug 29 14:16 Makefile~
+ 16K -rwxr--r-- 1 root root  16K Aug 29 14:14 amortizedAnalysis.txt
+8.0K -rwxr--r-- 1 root root 7.7K Aug 29 14:14 calc.c
+8.0K -rwxr--r-- 1 root root 7.7K Aug 29 14:14 dynamicArray.c
+4.0K -rwxr--r-- 1 root root  892 Aug 29 14:14 dynamicArray.h
+4.0K -rwxr--r-- 1 root root 3.0K Aug 29 14:14 testDynArray.c
+
+**** can't run testda-shared without some manipulation
+
+# ./testda-shared 
+./testda-shared: error while loading shared libraries: libDynArr.so: cannot open shared object file: No such file or directory
