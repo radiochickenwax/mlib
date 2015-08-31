@@ -53,3 +53,7 @@
     base shippable by tomorrow.  
 
 *** Mon Aug 31, 2015 07:38:38 looking ahead [[file:/n900t/usr/src/mlib/3/]]
+*** Mon Aug 31, 2015 09:01:45 build notes
+    This works on ubuntu, but not on cygwin. 
+
+    http://stackoverflow.com/questions/16154130/cygwin-g-linker-doesnt-find-shared-library
