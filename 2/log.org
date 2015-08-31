@@ -109,3 +109,15 @@
 
 # ./testda-shared 
 ./testda-shared: error while loading shared libraries: libDynArr.so: cannot open shared object file: No such file or directory
+*** Mon Aug 31, 2015 09:31:20 for future [0/2]
+    
+    - [ ] build [[file:/n900t/usr/src/mlib/3/]] off of 2
+      - this is a major goal really
+      - means putting dynArr into its own folder
+      - can just copy for now and remove later
+
+    - [ ] break calc out into its own project
+      - useful for eventually building a lisp interpreter
+      - also useful for computer algebra
+      - might be useful for graphics.  See gimp and gsumi projects.
+        Maybe these will make more sense after considering this project.
