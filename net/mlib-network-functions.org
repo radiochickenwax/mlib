@@ -10,4 +10,14 @@
      On another hand, there's really quite a bit.   Let's start with
      the python server/clients.
 
+**** Wed Sep 16, 2015 10:06:01 finally getting back to this.
+     Running into problems trying to add tcpUdpChat as a submodule.
+     This is from a different project at
+     https://github.com/mitchgre/tcpUdpChat.  
+
+     I'd really like to keep that project isolated.  The easiest
+     thing to do is just copy the source files and delete the git
+     trackers.  So I guess that's what I'm going to do now rather
+     than deal with submodules. 
+     
      
